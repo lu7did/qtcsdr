@@ -131,6 +131,7 @@ void MainWindow::untoggleOtherModButtonsThan(QPushButton* pb)
     protect = false;
 
     //we select the new demodulator
+
     if(ui->toggleRun->isChecked())
     {
         if(procDemod.pid()) kill(procDemod.pid(), SIGTERM);
