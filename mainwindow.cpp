@@ -219,6 +219,7 @@ QString MainWindow::getModulatorCommand()
             .replace("%TXFREQ_AM%", QString::number((ui->spinFreq->value()+10000)/1000,'f',0))
             .replace("%TXFREQ%", QString::number(ui->spinFreq->value()/1000,'f',0))
             .replace("%TXFREQ_SSB%", QString::number((ui->spinFreq->value()+2000)/1000,'f',0));
+    ui->lcdNumberPanel->display(float(ui->spinFreq->value()+10000)/1000);
     qDebug() << "myModCmd ="<<myModCmd;
     return myModCmd;
 }
@@ -318,8 +319,12 @@ void MainWindow::sendCommand(unsigned char cmd_num, unsigned value)
 
 void MainWindow::on_spinFreq_valueChanged(int val)
 {
+char hi[80];
     ui->spinCenter->setValue(ui->spinFreq->value()-ui->spinOffset->value());
+    ui->lcdNumberPanel->setSmallDecimalPoint(true);
     ui->lcdNumberPanel->display(float(val/1000));  //* Intervention to update LCD
+    //sprintf(hi,"%8.2f",float(val/1000));
+    //ui->lcdNumberPanel->display(hi);  //* Intervention to update LCD
     sendCommand(RTLTCP_SET_FREQ, ui->spinCenter->value());
 
     //procDemod.write("\x01\x05\x55\xa9\x60");
@@ -330,12 +335,16 @@ void MainWindow::on_spinOffset_valueChanged(int arg1)
 {
     setShift();
     ui->spinFreq->setValue(ui->spinCenter->value()+ui->spinOffset->value());
+    ui->lcdNumberPanel->display(float(ui->spinCenter->value()+ui->spinOffset->value())/1000);
+
+    
 }
 
 void MainWindow::on_spinCenter_valueChanged(int arg1)
 {
     sendCommand(RTLTCP_SET_FREQ, ui->spinCenter->value());
     ui->spinFreq->setValue(ui->spinCenter->value()+ui->spinOffset->value());
+    ui->lcdNumberPanel->display(float(ui->spinCenter->value()+ui->spinOffset->value())/1000);
 }
 
 void MainWindow::on_comboDirectSamp_currentIndexChanged(int index)
