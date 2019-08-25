@@ -319,7 +319,9 @@ void MainWindow::sendCommand(unsigned char cmd_num, unsigned value)
 void MainWindow::on_spinFreq_valueChanged(int val)
 {
     ui->spinCenter->setValue(ui->spinFreq->value()-ui->spinOffset->value());
+    ui->lcdNumberPanel->display(float(val/1000));  //* Intervention to update LCD
     sendCommand(RTLTCP_SET_FREQ, ui->spinCenter->value());
+
     //procDemod.write("\x01\x05\x55\xa9\x60");
     //procDemod.write("macska\n");
 }
