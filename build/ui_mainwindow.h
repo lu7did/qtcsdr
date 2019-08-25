@@ -48,6 +48,8 @@ public:
     QPushButton *toggleTransmit;
     QLabel *label_4;
     QComboBox *comboSampRate;
+    QPushButton *toggleLSB_2;
+    QPushButton *toggleLSB_3;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -78,71 +80,100 @@ public:
         widgetControls->setFont(font1);
         label = new QLabel(widgetControls);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(0, 0, 111, 31));
+        label->setGeometry(QRect(0, -4, 111, 31));
+        QFont font2;
+        font2.setPointSize(8);
+        label->setFont(font2);
         toggleAM = new QPushButton(widgetControls);
         toggleAM->setObjectName(QStringLiteral("toggleAM"));
-        toggleAM->setGeometry(QRect(420, 0, 61, 31));
+        toggleAM->setGeometry(QRect(360, 0, 30, 20));
+        toggleAM->setFont(font2);
         toggleAM->setCheckable(true);
         label_2 = new QLabel(widgetControls);
         label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(0, 80, 111, 31));
+        label_2->setGeometry(QRect(0, 25, 111, 31));
+        label_2->setFont(font2);
         spinFreq = new QSpinBox(widgetControls);
         spinFreq->setObjectName(QStringLiteral("spinFreq"));
-        spinFreq->setGeometry(QRect(120, 0, 171, 31));
+        spinFreq->setGeometry(QRect(60, 0, 100, 20));
+        spinFreq->setFont(font2);
         spinFreq->setMaximum(1999999999);
         spinFreq->setSingleStep(1000);
         spinFreq->setValue(89500000);
         spinOffset = new QSpinBox(widgetControls);
         spinOffset->setObjectName(QStringLiteral("spinOffset"));
-        spinOffset->setGeometry(QRect(120, 80, 171, 31));
+        spinOffset->setGeometry(QRect(60, 40, 100, 20));
+        spinOffset->setFont(font2);
         spinOffset->setMinimum(-1200000);
         spinOffset->setMaximum(1200000);
         spinOffset->setSingleStep(100);
         spinOffset->setValue(200000);
         toggleWFM = new QPushButton(widgetControls);
         toggleWFM->setObjectName(QStringLiteral("toggleWFM"));
-        toggleWFM->setGeometry(QRect(300, 0, 61, 31));
+        toggleWFM->setGeometry(QRect(300, 0, 30, 20));
+        toggleWFM->setFont(font2);
         toggleWFM->setCheckable(true);
-        toggleWFM->setChecked(true);
+        toggleWFM->setChecked(false);
         toggleUSB = new QPushButton(widgetControls);
         toggleUSB->setObjectName(QStringLiteral("toggleUSB"));
-        toggleUSB->setGeometry(QRect(480, 0, 61, 31));
+        toggleUSB->setGeometry(QRect(390, 0, 30, 20));
+        toggleUSB->setFont(font2);
         toggleUSB->setCheckable(true);
+        toggleUSB->setChecked(true);
         toggleLSB = new QPushButton(widgetControls);
         toggleLSB->setObjectName(QStringLiteral("toggleLSB"));
-        toggleLSB->setGeometry(QRect(540, 0, 61, 31));
+        toggleLSB->setGeometry(QRect(420, 0, 30, 20));
+        toggleLSB->setFont(font2);
         toggleLSB->setCheckable(true);
         toggleRun = new QPushButton(widgetControls);
         toggleRun->setObjectName(QStringLiteral("toggleRun"));
-        toggleRun->setGeometry(QRect(300, 80, 141, 71));
+        toggleRun->setGeometry(QRect(300, 30, 50, 20));
+        toggleRun->setFont(font2);
         toggleRun->setCheckable(true);
         toggleNFM = new QPushButton(widgetControls);
         toggleNFM->setObjectName(QStringLiteral("toggleNFM"));
-        toggleNFM->setGeometry(QRect(360, 0, 61, 31));
+        toggleNFM->setGeometry(QRect(330, 0, 30, 20));
+        toggleNFM->setFont(font2);
         toggleNFM->setCheckable(true);
         spinCenter = new QSpinBox(widgetControls);
         spinCenter->setObjectName(QStringLiteral("spinCenter"));
-        spinCenter->setGeometry(QRect(120, 40, 171, 31));
+        spinCenter->setGeometry(QRect(60, 20, 100, 20));
+        spinCenter->setFont(font2);
         spinCenter->setMaximum(1999999999);
         spinCenter->setSingleStep(1000);
         spinCenter->setValue(89300000);
         label_3 = new QLabel(widgetControls);
         label_3->setObjectName(QStringLiteral("label_3"));
-        label_3->setGeometry(QRect(0, 40, 111, 31));
+        label_3->setGeometry(QRect(0, 10, 111, 31));
+        label_3->setFont(font2);
         comboDirectSamp = new QComboBox(widgetControls);
         comboDirectSamp->setObjectName(QStringLiteral("comboDirectSamp"));
-        comboDirectSamp->setGeometry(QRect(300, 42, 301, 31));
+        comboDirectSamp->setGeometry(QRect(513, 0, 81, 20));
+        comboDirectSamp->setFont(font2);
         toggleTransmit = new QPushButton(widgetControls);
         toggleTransmit->setObjectName(QStringLiteral("toggleTransmit"));
         toggleTransmit->setEnabled(false);
-        toggleTransmit->setGeometry(QRect(450, 80, 151, 71));
+        toggleTransmit->setGeometry(QRect(300, 50, 50, 20));
+        toggleTransmit->setFont(font2);
         toggleTransmit->setCheckable(true);
         label_4 = new QLabel(widgetControls);
         label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setGeometry(QRect(0, 120, 121, 31));
+        label_4->setGeometry(QRect(0, 39, 121, 31));
+        label_4->setFont(font2);
         comboSampRate = new QComboBox(widgetControls);
         comboSampRate->setObjectName(QStringLiteral("comboSampRate"));
-        comboSampRate->setGeometry(QRect(120, 120, 171, 31));
+        comboSampRate->setGeometry(QRect(60, 60, 100, 20));
+        comboSampRate->setFont(font2);
+        toggleLSB_2 = new QPushButton(widgetControls);
+        toggleLSB_2->setObjectName(QStringLiteral("toggleLSB_2"));
+        toggleLSB_2->setGeometry(QRect(450, 0, 30, 20));
+        toggleLSB_2->setFont(font2);
+        toggleLSB_2->setCheckable(true);
+        toggleLSB_3 = new QPushButton(widgetControls);
+        toggleLSB_3->setObjectName(QStringLiteral("toggleLSB_3"));
+        toggleLSB_3->setGeometry(QRect(480, 0, 30, 20));
+        toggleLSB_3->setFont(font2);
+        toggleLSB_3->setCheckable(true);
 
         verticalLayout->addWidget(widgetControls);
 
@@ -165,7 +196,7 @@ public:
         toggleWFM->setText(QApplication::translate("MainWindow", "WFM", Q_NULLPTR));
         toggleUSB->setText(QApplication::translate("MainWindow", "USB", Q_NULLPTR));
         toggleLSB->setText(QApplication::translate("MainWindow", "LSB", Q_NULLPTR));
-        toggleRun->setText(QApplication::translate("MainWindow", "Receive", Q_NULLPTR));
+        toggleRun->setText(QApplication::translate("MainWindow", "Power", Q_NULLPTR));
         toggleNFM->setText(QApplication::translate("MainWindow", "NFM", Q_NULLPTR));
         label_3->setText(QApplication::translate("MainWindow", "Center:", Q_NULLPTR));
         comboDirectSamp->clear();
@@ -174,7 +205,7 @@ public:
          << QApplication::translate("MainWindow", "Direct sampling (I branch)", Q_NULLPTR)
          << QApplication::translate("MainWindow", "Direct sampling (Q branch)", Q_NULLPTR)
         );
-        toggleTransmit->setText(QApplication::translate("MainWindow", "Transmit", Q_NULLPTR));
+        toggleTransmit->setText(QApplication::translate("MainWindow", "PTT", Q_NULLPTR));
         label_4->setText(QApplication::translate("MainWindow", "Samp. rate:", Q_NULLPTR));
         comboSampRate->clear();
         comboSampRate->insertItems(0, QStringList()
@@ -186,6 +217,8 @@ public:
          << QApplication::translate("MainWindow", "480000", Q_NULLPTR)
          << QApplication::translate("MainWindow", "240000", Q_NULLPTR)
         );
+        toggleLSB_2->setText(QApplication::translate("MainWindow", "CW", Q_NULLPTR));
+        toggleLSB_3->setText(QApplication::translate("MainWindow", "CWR", Q_NULLPTR));
     } // retranslateUi
 
 };

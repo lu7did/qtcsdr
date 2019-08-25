@@ -61,10 +61,15 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
+         <y>-4</y>
          <width>111</width>
          <height>31</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Frequency:</string>
@@ -73,11 +78,16 @@
       <widget class="QPushButton" name="toggleAM">
        <property name="geometry">
         <rect>
-         <x>420</x>
+         <x>360</x>
          <y>0</y>
-         <width>61</width>
-         <height>31</height>
+         <width>30</width>
+         <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>AM</string>
@@ -90,10 +100,15 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>80</y>
+         <y>25</y>
          <width>111</width>
          <height>31</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Offset:</string>
@@ -102,11 +117,16 @@
       <widget class="QSpinBox" name="spinFreq">
        <property name="geometry">
         <rect>
-         <x>120</x>
+         <x>60</x>
          <y>0</y>
-         <width>171</width>
-         <height>31</height>
+         <width>100</width>
+         <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="maximum">
         <number>1999999999</number>
@@ -121,11 +141,16 @@
       <widget class="QSpinBox" name="spinOffset">
        <property name="geometry">
         <rect>
-         <x>120</x>
-         <y>80</y>
-         <width>171</width>
-         <height>31</height>
+         <x>60</x>
+         <y>40</y>
+         <width>100</width>
+         <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="minimum">
         <number>-1200000</number>
@@ -145,9 +170,14 @@
         <rect>
          <x>300</x>
          <y>0</y>
-         <width>61</width>
-         <height>31</height>
+         <width>30</width>
+         <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>WFM</string>
@@ -156,17 +186,22 @@
         <bool>true</bool>
        </property>
        <property name="checked">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
       <widget class="QPushButton" name="toggleUSB">
        <property name="geometry">
         <rect>
-         <x>480</x>
+         <x>390</x>
          <y>0</y>
-         <width>61</width>
-         <height>31</height>
+         <width>30</width>
+         <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>USB</string>
@@ -174,15 +209,23 @@
        <property name="checkable">
         <bool>true</bool>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
       <widget class="QPushButton" name="toggleLSB">
        <property name="geometry">
         <rect>
-         <x>540</x>
+         <x>420</x>
          <y>0</y>
-         <width>61</width>
-         <height>31</height>
+         <width>30</width>
+         <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>LSB</string>
@@ -195,13 +238,18 @@
        <property name="geometry">
         <rect>
          <x>300</x>
-         <y>80</y>
-         <width>141</width>
-         <height>71</height>
+         <y>30</y>
+         <width>50</width>
+         <height>20</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string>Receive</string>
+        <string>Power</string>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -210,11 +258,16 @@
       <widget class="QPushButton" name="toggleNFM">
        <property name="geometry">
         <rect>
-         <x>360</x>
+         <x>330</x>
          <y>0</y>
-         <width>61</width>
-         <height>31</height>
+         <width>30</width>
+         <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>NFM</string>
@@ -226,11 +279,16 @@
       <widget class="QSpinBox" name="spinCenter">
        <property name="geometry">
         <rect>
-         <x>120</x>
-         <y>40</y>
-         <width>171</width>
-         <height>31</height>
+         <x>60</x>
+         <y>20</y>
+         <width>100</width>
+         <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="maximum">
         <number>1999999999</number>
@@ -246,10 +304,15 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>40</y>
+         <y>10</y>
          <width>111</width>
          <height>31</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Center:</string>
@@ -258,11 +321,16 @@
       <widget class="QComboBox" name="comboDirectSamp">
        <property name="geometry">
         <rect>
-         <x>300</x>
-         <y>42</y>
-         <width>301</width>
-         <height>31</height>
+         <x>513</x>
+         <y>0</y>
+         <width>81</width>
+         <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <item>
         <property name="text">
@@ -286,14 +354,19 @@
        </property>
        <property name="geometry">
         <rect>
-         <x>450</x>
-         <y>80</y>
-         <width>151</width>
-         <height>71</height>
+         <x>300</x>
+         <y>50</y>
+         <width>50</width>
+         <height>20</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string>Transmit</string>
+        <string>PTT</string>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -303,10 +376,15 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>120</y>
+         <y>39</y>
          <width>121</width>
          <height>31</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>Samp. rate:</string>
@@ -315,11 +393,16 @@
       <widget class="QComboBox" name="comboSampRate">
        <property name="geometry">
         <rect>
-         <x>120</x>
-         <y>120</y>
-         <width>171</width>
-         <height>31</height>
+         <x>60</x>
+         <y>60</y>
+         <width>100</width>
+         <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
        </property>
        <property name="currentIndex">
         <number>0</number>
@@ -359,6 +442,48 @@
          <string>240000</string>
         </property>
        </item>
+      </widget>
+      <widget class="QPushButton" name="toggleLSB_2">
+       <property name="geometry">
+        <rect>
+         <x>450</x>
+         <y>0</y>
+         <width>30</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>CW</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="toggleLSB_3">
+       <property name="geometry">
+        <rect>
+         <x>480</x>
+         <y>0</y>
+         <width>30</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>CWR</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
      </widget>
     </item>
