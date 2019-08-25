@@ -15,8 +15,10 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLCDNumber>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QVBoxLayout>
@@ -50,6 +52,15 @@ public:
     QComboBox *comboSampRate;
     QPushButton *toggleLSB_2;
     QPushButton *toggleLSB_3;
+    QLCDNumber *lcdNumber;
+    QProgressBar *progressBarMeter;
+    QPushButton *pushButton;
+    QPushButton *pushButton_2;
+    QPushButton *pushButton_3;
+    QPushButton *pushButton_4;
+    QPushButton *pushButton_5;
+    QPushButton *pushButton_6;
+    QLabel *label_5;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -174,6 +185,46 @@ public:
         toggleLSB_3->setGeometry(QRect(480, 0, 30, 20));
         toggleLSB_3->setFont(font2);
         toggleLSB_3->setCheckable(true);
+        lcdNumber = new QLCDNumber(widgetControls);
+        lcdNumber->setObjectName(QStringLiteral("lcdNumber"));
+        lcdNumber->setGeometry(QRect(360, 30, 231, 71));
+        progressBarMeter = new QProgressBar(widgetControls);
+        progressBarMeter->setObjectName(QStringLiteral("progressBarMeter"));
+        progressBarMeter->setGeometry(QRect(360, 110, 231, 15));
+        progressBarMeter->setFont(font2);
+        progressBarMeter->setValue(24);
+        pushButton = new QPushButton(widgetControls);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        pushButton->setGeometry(QRect(300, 130, 40, 20));
+        pushButton->setFont(font2);
+        pushButton_2 = new QPushButton(widgetControls);
+        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        pushButton_2->setGeometry(QRect(350, 130, 40, 20));
+        pushButton_2->setFont(font2);
+        pushButton_3 = new QPushButton(widgetControls);
+        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
+        pushButton_3->setGeometry(QRect(400, 130, 40, 20));
+        pushButton_3->setFont(font2);
+        pushButton_4 = new QPushButton(widgetControls);
+        pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
+        pushButton_4->setGeometry(QRect(450, 130, 40, 20));
+        pushButton_4->setFont(font2);
+        pushButton_5 = new QPushButton(widgetControls);
+        pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
+        pushButton_5->setGeometry(QRect(500, 130, 40, 20));
+        pushButton_5->setFont(font2);
+        pushButton_6 = new QPushButton(widgetControls);
+        pushButton_6->setObjectName(QStringLiteral("pushButton_6"));
+        pushButton_6->setGeometry(QRect(550, 130, 40, 20));
+        pushButton_6->setFont(font2);
+        label_5 = new QLabel(widgetControls);
+        label_5->setObjectName(QStringLiteral("label_5"));
+        label_5->setGeometry(QRect(310, 110, 48, 15));
+        QFont font3;
+        font3.setPointSize(8);
+        font3.setBold(false);
+        font3.setWeight(50);
+        label_5->setFont(font3);
 
         verticalLayout->addWidget(widgetControls);
 
@@ -219,6 +270,14 @@ public:
         );
         toggleLSB_2->setText(QApplication::translate("MainWindow", "CW", Q_NULLPTR));
         toggleLSB_3->setText(QApplication::translate("MainWindow", "CWR", Q_NULLPTR));
+        progressBarMeter->setFormat(QApplication::translate("MainWindow", "%p", Q_NULLPTR));
+        pushButton->setText(QApplication::translate("MainWindow", "A/B", Q_NULLPTR));
+        pushButton_2->setText(QApplication::translate("MainWindow", "A>B", Q_NULLPTR));
+        pushButton_3->setText(QApplication::translate("MainWindow", "A<>B", Q_NULLPTR));
+        pushButton_4->setText(QApplication::translate("MainWindow", "Split", Q_NULLPTR));
+        pushButton_5->setText(QApplication::translate("MainWindow", "RIT", Q_NULLPTR));
+        pushButton_6->setText(QApplication::translate("MainWindow", "Lock", Q_NULLPTR));
+        label_5->setText(QApplication::translate("MainWindow", "Meter", Q_NULLPTR));
     } // retranslateUi
 
 };
