@@ -1,3 +1,17 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 This software is part of qtcsdr.
 
@@ -188,7 +202,6 @@ void MainWindow::openSerialPort()
     m_serial->setStopBits(QSerialPort::TwoStop);
     m_serial->setFlowControl(QSerialPort::NoFlowControl);
     if (m_serial->open(QIODevice::ReadWrite)) {
-       qDebug() << "Open success";
         //m_console->setEnabled(true);
         //m_console->setLocalEchoEnabled(p.localEchoEnabled);
         //m_ui->actionConnect->setEnabled(false);
@@ -198,7 +211,6 @@ void MainWindow::openSerialPort()
         //                  .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
         //                  .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
     } else {
-        qDebug() << "Open Error";
         //QMessageBox::critical(this, tr("Error"), m_serial->errorString());
         //showStatusMessage(tr("Open error"));
     }
@@ -238,21 +250,32 @@ void MainWindow::CATgetTX() {
 }
 
 
-void MainWindow::writeChar(byte d) 
-
-{
-
-}
 void MainWindow::writeData(const QByteArray &data)
 {
     qDebug() << "writeData()" << data << data.size();;
-    m_serial->write(data,1);
-
+    m_serial->write(data);
 }
 
 void MainWindow::CATCallBack() {
 
-    fprintf(stderr,"CATCallBack():received char(%d)\n",cat->bufChar[0]);
+   fprintf(stderr,"CATCallBack():received char(%d)\n",cat->bufChar[0]);
+
+   char a[3]={0x00,0x00,0x00};
+   a[0]=cat->bufChar[0];
+   QByteArray b(a,1);
+   qint64 len=1;
+
+   fprintf(stderr,"CATCallBack(): b[0]=%d\n",b.at(0));
+
+   m_serial->write(&b,len);
+
+
+   //const QByteArray d;
+   //d.append(char(cat->bufChar[0]));
+   //byte* b[10];
+   //b[0]=cat->bufChar[0];
+   //m_serial->write(&b[0],len);
+   //this->writeData(QByteArray &d);
 
 }
 
@@ -270,34 +293,33 @@ void MainWindow::readData()
     BCDbuf[5]=0x00;
     BCDbuf[6]=0x00;
     BCDbuf[7]=0x00;
-
     const QByteArray data = m_serial->readAll();
     qDebug() << "readData(): " << data.size() << " " << data;
 
+    //n=n+data.size();
     for (int m = 0; m < data.size(); m++) {
         cat->rxBuffer[cat->n]=data.at(m);
         cat->n++;
     }
-
     if (cat->n==5) {
        char buffer[18];
        cat->hex2str(&buffer[0],&cat->rxBuffer[0],cat->n);
-       fprintf (stderr,"readData(): Received Serial hex2str (%s)\n",buffer);
+       fprintf (stderr,"Received Serial hex2str (%s)\n",buffer);
        cat->processCAT(&cat->rxBuffer[0]);
        cat->n=0;
-       if (cat->bufLen!=0) {
-          fprintf(stderr,"readData(): Response detected %s\n",(char*)&cat->bufChar[0]);
-          cat->hex2str(&buffer[0],&cat->bufChar[0],cat->bufLen);
-          fprintf (stderr,"readData(): Response produced hex2str (%s)\n",buffer);
-          m_serial->write((char*)&cat->bufChar[0],cat->bufLen);
-          cat->bufLen=0;
-       }
        maxFrame--;
        if (maxFrame==0) { 
           return;  //If processed one command don't get stuck here
        }
 
     }
+    //cat->sendSerial(&BCDbuf[0],data.size());
+    //cat->hex2str(&buffer[0],&BCDbuf[0],data.size());
+    //fprintf(stderr,"CAT Frame->%s\n",buffer);
+    //cat->sendSerial((byte*)BCDbuf[0],(int)data.size());
+
+    //fprintf(stderr,"BCD function %d\n",cat->decToBcd(28217));
+   //m_console->putData(data);
 }
 
 void MainWindow::handleError(QSerialPort::SerialPortError error)

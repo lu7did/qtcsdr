@@ -96,11 +96,10 @@ private slots:
     void closeSerialPort();
     //void about();
     void writeData(const QByteArray &data);
+    void writeChar(byte d);
     void readData();
 
     void handleError(QSerialPort::SerialPortError error);
-
-
 
 private:
     Ui::MainWindow *ui;
@@ -110,11 +109,13 @@ private:
     QString getDemodulatorCommand();
     void redirectProcessOutput(QProcess &proc, bool onlyStdErr = false);
     void updateFilterBw();
-    //void CATchangeFreq ();
-    //void CATchangeStatus();
-    //void CATchangeMode();
-    //void CATgetRX();
-    //void CATgetTX();
+
+
+    void CATchangeFreq ();
+    void CATchangeStatus();
+    void CATchangeMode();
+    void CATgetRX();
+    void CATgetTX();
 
     void CATCallBack();
     QString getNextArgAfter(QString what);
