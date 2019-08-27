@@ -31,16 +31,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+//*----------------------------------------------------------------------------
+//* Special macro definitions to adapt for previous code on the Arduino board
+//*----------------------------------------------------------------------------
+typedef unsigned char byte;
+typedef bool boolean;
+
+//*--- Function prototypes
+void setWord(unsigned char* SysWord,unsigned char  v, bool val);
+bool getWord (unsigned char SysWord, unsigned char v);
+
+
 #include <QMainWindow>
 #include <QPushButton>
 #include <QProcess>
 #include <QTimer>
 #include <QTextStream>
+#include <QSerialPort>
+#include <cmath>
+#include <wiringPi.h>
 
 #define RTLTCP_SET_FREQ 0x1
 #define RTLTCP_SET_DIRECT_SAMPLING 0x9
 
+
+
 namespace Ui {
+
+
 class MainWindow;
 }
 
@@ -60,6 +78,7 @@ private slots:
     void on_toggleLSB_toggled(bool checked);
     void on_toggleRun_toggled(bool checked);
     void on_spinFreq_valueChanged(int val);
+    void on_lcdNumberPanel_valueChanged(int val);
     void tmrRead_timeout();
     void setShift();
     void on_shiftChanged(int newOffset);
@@ -72,6 +91,17 @@ private slots:
 
     void on_toggleTransmit_toggled(bool checked);
 
+
+    void openSerialPort();
+    void closeSerialPort();
+    //void about();
+    void writeData(const QByteArray &data);
+    void readData();
+
+    void handleError(QSerialPort::SerialPortError error);
+
+
+
 private:
     Ui::MainWindow *ui;
     QList<QPushButton*> modsButtons;
@@ -80,6 +110,13 @@ private:
     QString getDemodulatorCommand();
     void redirectProcessOutput(QProcess &proc, bool onlyStdErr = false);
     void updateFilterBw();
+    //void CATchangeFreq ();
+    //void CATchangeStatus();
+    //void CATchangeMode();
+    //void CATgetRX();
+    //void CATgetTX();
+
+    void CATCallBack();
     QString getNextArgAfter(QString what);
     QString getModulatorCommand();
     QProcess procDemod;
@@ -96,6 +133,13 @@ private:
     QString audioPlayerCommand;
     QString audioRecordCommand;
     QString alsaDevice;
+
+
+
+    QSerialPort *m_serial = nullptr;
+
+
+
 };
 
 #endif // MAINWINDOW_H

@@ -34,14 +34,14 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = qtcsdr
 TEMPLATE = app
 
-
+LIBS += -lwiringPi -lwiringPiDev
 SOURCES += main.cpp\
         mainwindow.cpp \
     qmyspectrumwidget.cpp

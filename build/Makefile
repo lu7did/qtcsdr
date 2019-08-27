@@ -12,10 +12,10 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -O2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../../qtcsdr -I. -isystem /usr/include/arm-linux-gnueabihf/qt5 -isystem /usr/include/arm-linux-gnueabihf/qt5/QtWidgets -isystem /usr/include/arm-linux-gnueabihf/qt5/QtGui -isystem /usr/include/arm-linux-gnueabihf/qt5/QtCore -I. -I. -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-g++
+INCPATH       = -I../../qtcsdr -I. -isystem /usr/include/arm-linux-gnueabihf/qt5 -isystem /usr/include/arm-linux-gnueabihf/qt5/QtWidgets -isystem /usr/include/arm-linux-gnueabihf/qt5/QtGui -isystem /usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -isystem /usr/include/arm-linux-gnueabihf/qt5/QtCore -I. -I. -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-g++
 QMAKE         = /usr/lib/arm-linux-gnueabihf/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = qtcsdr1.0.0
 DISTDIR = /home/pi/qtcsdr/build/.tmp/qtcsdr1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1
-LIBS          = $(SUBLIBS) -lQt5Widgets -lQt5Gui -lQt5Core -lGLESv2 -lpthread 
+LIBS          = $(SUBLIBS) -lwiringPi -lwiringPiDev -lQt5Widgets -lQt5Gui -lQt5SerialPort -lQt5Core -lGLESv2 -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -199,6 +199,7 @@ Makefile: ../qtcsdr.pro /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-g++/qmake
 		../qtcsdr.pro \
 		/usr/lib/arm-linux-gnueabihf/libQt5Widgets.prl \
 		/usr/lib/arm-linux-gnueabihf/libQt5Gui.prl \
+		/usr/lib/arm-linux-gnueabihf/libQt5SerialPort.prl \
 		/usr/lib/arm-linux-gnueabihf/libQt5Core.prl
 	$(QMAKE) -o Makefile ../qtcsdr.pro
 /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/spec_pre.prf:
@@ -266,6 +267,7 @@ Makefile: ../qtcsdr.pro /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-g++/qmake
 ../qtcsdr.pro:
 /usr/lib/arm-linux-gnueabihf/libQt5Widgets.prl:
 /usr/lib/arm-linux-gnueabihf/libQt5Gui.prl:
+/usr/lib/arm-linux-gnueabihf/libQt5SerialPort.prl:
 /usr/lib/arm-linux-gnueabihf/libQt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -o Makefile ../qtcsdr.pro
@@ -314,11 +316,11 @@ compiler_moc_header_clean:
 	-$(DEL_FILE) moc_mainwindow.cpp moc_qmyspectrumwidget.cpp
 moc_mainwindow.cpp: ../mainwindow.h \
 		/usr/lib/arm-linux-gnueabihf/qt5/bin/moc
-	/usr/lib/arm-linux-gnueabihf/qt5/bin/moc $(DEFINES) -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-g++ -I/home/pi/qtcsdr -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtWidgets -I/usr/include/arm-linux-gnueabihf/qt5/QtGui -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I. -I/usr/include/c++/6 -I/usr/include/arm-linux-gnueabihf/c++/6 -I/usr/include/c++/6/backward -I/usr/lib/gcc/arm-linux-gnueabihf/6/include -I/usr/local/include -I/usr/lib/gcc/arm-linux-gnueabihf/6/include-fixed -I/usr/include/arm-linux-gnueabihf -I/usr/include ../mainwindow.h -o moc_mainwindow.cpp
+	/usr/lib/arm-linux-gnueabihf/qt5/bin/moc $(DEFINES) -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-g++ -I/home/pi/qtcsdr -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtWidgets -I/usr/include/arm-linux-gnueabihf/qt5/QtGui -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I. -I/usr/include/c++/6 -I/usr/include/arm-linux-gnueabihf/c++/6 -I/usr/include/c++/6/backward -I/usr/lib/gcc/arm-linux-gnueabihf/6/include -I/usr/local/include -I/usr/lib/gcc/arm-linux-gnueabihf/6/include-fixed -I/usr/include/arm-linux-gnueabihf -I/usr/include ../mainwindow.h -o moc_mainwindow.cpp
 
 moc_qmyspectrumwidget.cpp: ../qmyspectrumwidget.h \
 		/usr/lib/arm-linux-gnueabihf/qt5/bin/moc
-	/usr/lib/arm-linux-gnueabihf/qt5/bin/moc $(DEFINES) -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-g++ -I/home/pi/qtcsdr -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtWidgets -I/usr/include/arm-linux-gnueabihf/qt5/QtGui -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I. -I/usr/include/c++/6 -I/usr/include/arm-linux-gnueabihf/c++/6 -I/usr/include/c++/6/backward -I/usr/lib/gcc/arm-linux-gnueabihf/6/include -I/usr/local/include -I/usr/lib/gcc/arm-linux-gnueabihf/6/include-fixed -I/usr/include/arm-linux-gnueabihf -I/usr/include ../qmyspectrumwidget.h -o moc_qmyspectrumwidget.cpp
+	/usr/lib/arm-linux-gnueabihf/qt5/bin/moc $(DEFINES) -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-g++ -I/home/pi/qtcsdr -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtWidgets -I/usr/include/arm-linux-gnueabihf/qt5/QtGui -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I. -I/usr/include/c++/6 -I/usr/include/arm-linux-gnueabihf/c++/6 -I/usr/include/c++/6/backward -I/usr/lib/gcc/arm-linux-gnueabihf/6/include -I/usr/local/include -I/usr/lib/gcc/arm-linux-gnueabihf/6/include-fixed -I/usr/include/arm-linux-gnueabihf -I/usr/include ../qmyspectrumwidget.h -o moc_qmyspectrumwidget.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -343,7 +345,8 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 main.o: ../main.cpp ../mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../main.cpp
 
-mainwindow.o: ../mainwindow.cpp ../mainwindow.h \
+mainwindow.o: ../mainwindow.cpp ../../PixiePi/src/lib/CAT817.h \
+		../mainwindow.h \
 		ui_mainwindow.h \
 		../qmyspectrumwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../mainwindow.cpp
