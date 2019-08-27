@@ -217,23 +217,23 @@ void MainWindow::closeSerialPort()
 }
 
 void MainWindow::CATchangeFreq () {
-    qDebug() << "changeFreq() event";
+    //qDebug() << "changeFreq() event";
 
 }
 void MainWindow::CATchangeStatus() {
-    qDebug() <<  "changeStatus()";
+    //qDebug() <<  "changeStatus()";
 
 }
 void MainWindow::CATchangeMode() {
-    qDebug() << "changeMode()";
+    //qDebug() << "changeMode()";
 
 }
 void MainWindow::CATgetRX() {
-    qDebug() << "getR()";
+    //qDebug() << "getR()";
 
 }
 void MainWindow::CATgetTX() {
-    qDebug() << "getTX()";
+    //qDebug() << "getTX()";
 
 }
 
@@ -245,14 +245,13 @@ void MainWindow::writeChar(byte d)
 }
 void MainWindow::writeData(const QByteArray &data)
 {
-    qDebug() << "writeData()" << data << data.size();;
+    //qDebug() << "writeData()" << data << data.size();;
     m_serial->write(data,1);
 
 }
 
 void MainWindow::CATCallBack() {
 
-    fprintf(stderr,"CATCallBack():received char(%d)\n",cat->bufChar[0]);
 
 }
 
@@ -272,7 +271,7 @@ void MainWindow::readData()
     BCDbuf[7]=0x00;
 
     const QByteArray data = m_serial->readAll();
-    qDebug() << "readData(): " << data.size() << " " << data;
+    //qDebug() << "readData(): " << data.size() << " " << data;
 
     for (int m = 0; m < data.size(); m++) {
         cat->rxBuffer[cat->n]=data.at(m);
@@ -286,7 +285,6 @@ void MainWindow::readData()
        cat->processCAT(&cat->rxBuffer[0]);
        cat->n=0;
        if (cat->bufLen!=0) {
-          fprintf(stderr,"readData(): Response detected %s\n",(char*)&cat->bufChar[0]);
           cat->hex2str(&buffer[0],&cat->bufChar[0],cat->bufLen);
           fprintf (stderr,"readData(): Response produced hex2str (%s)\n",buffer);
           m_serial->write((char*)&cat->bufChar[0],cat->bufLen);
