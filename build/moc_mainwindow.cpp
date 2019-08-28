@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[34];
-    char stringdata0[517];
+    QByteArrayData data[38];
+    char stringdata0[600];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -37,38 +37,44 @@ QT_MOC_LITERAL(4, 41, 20), // "on_toggleNFM_toggled"
 QT_MOC_LITERAL(5, 62, 19), // "on_toggleAM_toggled"
 QT_MOC_LITERAL(6, 82, 20), // "on_toggleUSB_toggled"
 QT_MOC_LITERAL(7, 103, 20), // "on_toggleLSB_toggled"
-QT_MOC_LITERAL(8, 124, 20), // "on_toggleRun_toggled"
-QT_MOC_LITERAL(9, 145, 24), // "on_spinFreq_valueChanged"
-QT_MOC_LITERAL(10, 170, 3), // "val"
-QT_MOC_LITERAL(11, 174, 30), // "on_lcdNumberPanel_valueChanged"
-QT_MOC_LITERAL(12, 205, 15), // "tmrRead_timeout"
-QT_MOC_LITERAL(13, 221, 8), // "setShift"
-QT_MOC_LITERAL(14, 230, 15), // "on_shiftChanged"
-QT_MOC_LITERAL(15, 246, 9), // "newOffset"
-QT_MOC_LITERAL(16, 256, 26), // "on_spinOffset_valueChanged"
-QT_MOC_LITERAL(17, 283, 4), // "arg1"
-QT_MOC_LITERAL(18, 288, 26), // "on_spinCenter_valueChanged"
-QT_MOC_LITERAL(19, 315, 38), // "on_comboDirectSamp_currentInd..."
-QT_MOC_LITERAL(20, 354, 5), // "index"
-QT_MOC_LITERAL(21, 360, 25), // "on_toggleTransmit_toggled"
-QT_MOC_LITERAL(22, 386, 14), // "openSerialPort"
-QT_MOC_LITERAL(23, 401, 15), // "closeSerialPort"
-QT_MOC_LITERAL(24, 417, 9), // "writeData"
-QT_MOC_LITERAL(25, 427, 4), // "data"
-QT_MOC_LITERAL(26, 432, 9), // "writeChar"
-QT_MOC_LITERAL(27, 442, 4), // "byte"
-QT_MOC_LITERAL(28, 447, 1), // "d"
-QT_MOC_LITERAL(29, 449, 8), // "readData"
-QT_MOC_LITERAL(30, 458, 11), // "handleError"
-QT_MOC_LITERAL(31, 470, 28), // "QSerialPort::SerialPortError"
-QT_MOC_LITERAL(32, 499, 5), // "error"
-QT_MOC_LITERAL(33, 505, 11) // "handleTimer"
+QT_MOC_LITERAL(8, 124, 19), // "on_toggleCW_toggled"
+QT_MOC_LITERAL(9, 144, 20), // "on_toggleCWR_toggled"
+QT_MOC_LITERAL(10, 165, 20), // "on_toggleDSP_toggled"
+QT_MOC_LITERAL(11, 186, 20), // "on_togglePKT_toggled"
+QT_MOC_LITERAL(12, 207, 20), // "on_toggleRun_toggled"
+QT_MOC_LITERAL(13, 228, 24), // "on_spinFreq_valueChanged"
+QT_MOC_LITERAL(14, 253, 3), // "val"
+QT_MOC_LITERAL(15, 257, 30), // "on_lcdNumberPanel_valueChanged"
+QT_MOC_LITERAL(16, 288, 15), // "tmrRead_timeout"
+QT_MOC_LITERAL(17, 304, 8), // "setShift"
+QT_MOC_LITERAL(18, 313, 15), // "on_shiftChanged"
+QT_MOC_LITERAL(19, 329, 9), // "newOffset"
+QT_MOC_LITERAL(20, 339, 26), // "on_spinOffset_valueChanged"
+QT_MOC_LITERAL(21, 366, 4), // "arg1"
+QT_MOC_LITERAL(22, 371, 26), // "on_spinCenter_valueChanged"
+QT_MOC_LITERAL(23, 398, 38), // "on_comboDirectSamp_currentInd..."
+QT_MOC_LITERAL(24, 437, 5), // "index"
+QT_MOC_LITERAL(25, 443, 25), // "on_toggleTransmit_toggled"
+QT_MOC_LITERAL(26, 469, 14), // "openSerialPort"
+QT_MOC_LITERAL(27, 484, 15), // "closeSerialPort"
+QT_MOC_LITERAL(28, 500, 9), // "writeData"
+QT_MOC_LITERAL(29, 510, 4), // "data"
+QT_MOC_LITERAL(30, 515, 9), // "writeChar"
+QT_MOC_LITERAL(31, 525, 4), // "byte"
+QT_MOC_LITERAL(32, 530, 1), // "d"
+QT_MOC_LITERAL(33, 532, 8), // "readData"
+QT_MOC_LITERAL(34, 541, 11), // "handleError"
+QT_MOC_LITERAL(35, 553, 28), // "QSerialPort::SerialPortError"
+QT_MOC_LITERAL(36, 582, 5), // "error"
+QT_MOC_LITERAL(37, 588, 11) // "handleTimer"
 
     },
     "MainWindow\0on_toggleWFM_toggled\0\0"
     "checked\0on_toggleNFM_toggled\0"
     "on_toggleAM_toggled\0on_toggleUSB_toggled\0"
-    "on_toggleLSB_toggled\0on_toggleRun_toggled\0"
+    "on_toggleLSB_toggled\0on_toggleCW_toggled\0"
+    "on_toggleCWR_toggled\0on_toggleDSP_toggled\0"
+    "on_togglePKT_toggled\0on_toggleRun_toggled\0"
     "on_spinFreq_valueChanged\0val\0"
     "on_lcdNumberPanel_valueChanged\0"
     "tmrRead_timeout\0setShift\0on_shiftChanged\0"
@@ -89,7 +95,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      22,   14, // methods
+      26,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -97,28 +103,32 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,  124,    2, 0x08 /* Private */,
-       4,    1,  127,    2, 0x08 /* Private */,
-       5,    1,  130,    2, 0x08 /* Private */,
-       6,    1,  133,    2, 0x08 /* Private */,
-       7,    1,  136,    2, 0x08 /* Private */,
-       8,    1,  139,    2, 0x08 /* Private */,
-       9,    1,  142,    2, 0x08 /* Private */,
-      11,    1,  145,    2, 0x08 /* Private */,
-      12,    0,  148,    2, 0x08 /* Private */,
-      13,    0,  149,    2, 0x08 /* Private */,
-      14,    1,  150,    2, 0x08 /* Private */,
-      16,    1,  153,    2, 0x08 /* Private */,
-      18,    1,  156,    2, 0x08 /* Private */,
-      19,    1,  159,    2, 0x08 /* Private */,
-      21,    1,  162,    2, 0x08 /* Private */,
-      22,    0,  165,    2, 0x08 /* Private */,
-      23,    0,  166,    2, 0x08 /* Private */,
-      24,    1,  167,    2, 0x08 /* Private */,
-      26,    1,  170,    2, 0x08 /* Private */,
-      29,    0,  173,    2, 0x08 /* Private */,
-      30,    1,  174,    2, 0x08 /* Private */,
-      33,    0,  177,    2, 0x08 /* Private */,
+       1,    1,  144,    2, 0x08 /* Private */,
+       4,    1,  147,    2, 0x08 /* Private */,
+       5,    1,  150,    2, 0x08 /* Private */,
+       6,    1,  153,    2, 0x08 /* Private */,
+       7,    1,  156,    2, 0x08 /* Private */,
+       8,    1,  159,    2, 0x08 /* Private */,
+       9,    1,  162,    2, 0x08 /* Private */,
+      10,    1,  165,    2, 0x08 /* Private */,
+      11,    1,  168,    2, 0x08 /* Private */,
+      12,    1,  171,    2, 0x08 /* Private */,
+      13,    1,  174,    2, 0x08 /* Private */,
+      15,    1,  177,    2, 0x08 /* Private */,
+      16,    0,  180,    2, 0x08 /* Private */,
+      17,    0,  181,    2, 0x08 /* Private */,
+      18,    1,  182,    2, 0x08 /* Private */,
+      20,    1,  185,    2, 0x08 /* Private */,
+      22,    1,  188,    2, 0x08 /* Private */,
+      23,    1,  191,    2, 0x08 /* Private */,
+      25,    1,  194,    2, 0x08 /* Private */,
+      26,    0,  197,    2, 0x08 /* Private */,
+      27,    0,  198,    2, 0x08 /* Private */,
+      28,    1,  199,    2, 0x08 /* Private */,
+      30,    1,  202,    2, 0x08 /* Private */,
+      33,    0,  205,    2, 0x08 /* Private */,
+      34,    1,  206,    2, 0x08 /* Private */,
+      37,    0,  209,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Bool,    3,
@@ -127,21 +137,25 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void, QMetaType::Bool,    3,
     QMetaType::Void, QMetaType::Bool,    3,
     QMetaType::Void, QMetaType::Bool,    3,
-    QMetaType::Void, QMetaType::Int,   10,
-    QMetaType::Void, QMetaType::Int,   10,
+    QMetaType::Void, QMetaType::Bool,    3,
+    QMetaType::Void, QMetaType::Bool,    3,
+    QMetaType::Void, QMetaType::Bool,    3,
+    QMetaType::Void, QMetaType::Bool,    3,
+    QMetaType::Void, QMetaType::Int,   14,
+    QMetaType::Void, QMetaType::Int,   14,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   15,
-    QMetaType::Void, QMetaType::Int,   17,
-    QMetaType::Void, QMetaType::Int,   17,
-    QMetaType::Void, QMetaType::Int,   20,
+    QMetaType::Void, QMetaType::Int,   19,
+    QMetaType::Void, QMetaType::Int,   21,
+    QMetaType::Void, QMetaType::Int,   21,
+    QMetaType::Void, QMetaType::Int,   24,
     QMetaType::Void, QMetaType::Bool,    3,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QByteArray,   25,
-    QMetaType::Void, 0x80000000 | 27,   28,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::QByteArray,   29,
     QMetaType::Void, 0x80000000 | 31,   32,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 35,   36,
     QMetaType::Void,
 
        0        // eod
@@ -158,23 +172,27 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 2: _t->on_toggleAM_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 3: _t->on_toggleUSB_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 4: _t->on_toggleLSB_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 5: _t->on_toggleRun_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 6: _t->on_spinFreq_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 7: _t->on_lcdNumberPanel_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 8: _t->tmrRead_timeout(); break;
-        case 9: _t->setShift(); break;
-        case 10: _t->on_shiftChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 11: _t->on_spinOffset_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 12: _t->on_spinCenter_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 13: _t->on_comboDirectSamp_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 14: _t->on_toggleTransmit_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 15: _t->openSerialPort(); break;
-        case 16: _t->closeSerialPort(); break;
-        case 17: _t->writeData((*reinterpret_cast< const QByteArray(*)>(_a[1]))); break;
-        case 18: _t->writeChar((*reinterpret_cast< byte(*)>(_a[1]))); break;
-        case 19: _t->readData(); break;
-        case 20: _t->handleError((*reinterpret_cast< QSerialPort::SerialPortError(*)>(_a[1]))); break;
-        case 21: _t->handleTimer(); break;
+        case 5: _t->on_toggleCW_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 6: _t->on_toggleCWR_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 7: _t->on_toggleDSP_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 8: _t->on_togglePKT_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 9: _t->on_toggleRun_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 10: _t->on_spinFreq_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 11: _t->on_lcdNumberPanel_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 12: _t->tmrRead_timeout(); break;
+        case 13: _t->setShift(); break;
+        case 14: _t->on_shiftChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 15: _t->on_spinOffset_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 16: _t->on_spinCenter_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 17: _t->on_comboDirectSamp_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 18: _t->on_toggleTransmit_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 19: _t->openSerialPort(); break;
+        case 20: _t->closeSerialPort(); break;
+        case 21: _t->writeData((*reinterpret_cast< const QByteArray(*)>(_a[1]))); break;
+        case 22: _t->writeChar((*reinterpret_cast< byte(*)>(_a[1]))); break;
+        case 23: _t->readData(); break;
+        case 24: _t->handleError((*reinterpret_cast< QSerialPort::SerialPortError(*)>(_a[1]))); break;
+        case 25: _t->handleTimer(); break;
         default: ;
         }
     }
@@ -205,13 +223,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 22)
+        if (_id < 26)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 22;
+        _id -= 26;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 22)
+        if (_id < 26)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 22;
+        _id -= 26;
     }
     return _id;
 }

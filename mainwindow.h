@@ -76,6 +76,11 @@ private slots:
     void on_toggleAM_toggled(bool checked);
     void on_toggleUSB_toggled(bool checked);
     void on_toggleLSB_toggled(bool checked);
+    void on_toggleCW_toggled(bool checked);
+    void on_toggleCWR_toggled(bool checked);
+    void on_toggleDSP_toggled(bool checked);
+    void on_togglePKT_toggled(bool checked);
+
     void on_toggleRun_toggled(bool checked);
     void on_spinFreq_valueChanged(int val);
     void on_lcdNumberPanel_valueChanged(int val);
@@ -128,6 +133,7 @@ private:
     QProcess procTX;
     QProcess procKillTX;
     QString fifoPipePath;
+
     int fifoPipe;
     QTimer tmrRead;
     QTextStream qStdOut;
@@ -135,6 +141,9 @@ private:
     QString audioPlayerCommand;
     QString audioRecordCommand;
     QString alsaDevice;
+
+    bool fchangeMode=false;
+
 
     int TSEC=10;
     int TCAT=20;

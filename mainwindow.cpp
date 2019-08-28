@@ -72,7 +72,7 @@ CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
 
 #define CMD_IQSERVER "pgroup -9 rtl_tcp -a 127.0.0.1 -s %SAMP_RATE% -p 4950 -f 89500000"
 #define CMD_DISTRIB "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4950; sleep .3; done) | nmux -p 4951 -a 127.0.0.1 -b %NMUX_BUFSIZE% -n %NMUX_BUFCNT%\""
-#define CMD_MOD_WFM "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %WFM_DECIM% 0.05 HAMMING  | csdr fmdemod_quadri_cf | csdr fractional_decimator_ff 5 | csdr deemphasis_wfm_ff 48000 50e-6 | csdr convert_f_i16 |  %AUDIOPLAYER%\""
+#define CMD_MOD_WFM "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %WFM_DECIM% 0.05 HAMMING  | csdr tee /tmp/qtcsdr_power | csdr fmdemod_quadri_cf | csdr fractional_decimator_ff 5 | csdr deemphasis_wfm_ff 48000 50e-6 | csdr convert_f_i16 |  %AUDIOPLAYER%\""
 #define CMD_MOD_NFM "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %DECIM% 0.005 HAMMING | csdr fmdemod_quadri_cf | csdr limit_ff | csdr deemphasis_nfm_ff 48000 | csdr fastagc_ff | csdr convert_f_i16 |       %AUDIOPLAYER%\""
 #define CMD_MOD_AM  "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %DECIM% 0.005 HAMMING | csdr amdemod_cf | csdr fastdcblock_ff | csdr agc_ff | csdr limit_ff | csdr convert_f_i16 |                           %AUDIOPLAYER%\""
 #define CMD_MOD_USB "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %DECIM% 0.005 HAMMING | csdr bandpass_fir_fft_cc 0 0.1 0.05 | csdr realpart_cf | csdr agc_ff | csdr limit_ff | csdr convert_f_i16 |          %AUDIOPLAYER%\""
@@ -80,6 +80,8 @@ CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
 #define CMD_FFT     "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr fft_cc 2048 %FFT_READ_SIZE% | csdr logpower_cf -70 | csdr fft_exchange_sides_ff 2048\""
 #define CMD_MOD_CW  "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %DECIM% 0.005 HAMMING | csdr bandpass_fir_fft_cc 0 0.1 0.05 | csdr realpart_cf | csdr agc_ff | csdr limit_ff | csdr convert_f_i16 |          %AUDIOPLAYER%\""
 #define CMD_MOD_CWR "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %DECIM% 0.005 HAMMING | csdr bandpass_fir_fft_cc -0.1 0 0.05 | csdr realpart_cf | csdr agc_ff | csdr limit_ff | csdr convert_f_i16 |         %AUDIOPLAYER%\""
+#define CMD_MOD_DSP "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %DECIM% 0.005 HAMMING | csdr bandpass_fir_fft_cc 0 0.1 0.05 | csdr realpart_cf | csdr agc_ff | csdr limit_ff | csdr convert_f_i16 |          %AUDIOPLAYER%\""
+#define CMD_MOD_PKT "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %DECIM% 0.005 HAMMING | csdr bandpass_fir_fft_cc 0 0.1 0.05 | csdr realpart_cf | csdr agc_ff | csdr limit_ff | csdr convert_f_i16 |          %AUDIOPLAYER%\""
 
 #define CMD_ARECORD "arecord %ADEVICE% -f S16_LE -r 48000 -c 1"
 
@@ -90,6 +92,8 @@ CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
 #define CMD_TX_LSB  "pgroup bash -c \"%ARECORD% | csdr convert_i16_f | csdr dsb_fc | csdr bandpass_fir_fft_cc -0.1 0 0.01 | csdr gain_ff 2 | csdr shift_addition_cc 0.2 | (gksu touch; sudo rpitx -i- -m IQFLOAT -f %TXFREQ_SSB%)\""
 #define CMD_TX_CWR  "pgroup bash -c \"%ARECORD% | csdr convert_i16_f | csdr dsb_fc | csdr bandpass_fir_fft_cc -0.1 0 0.01 | csdr gain_ff 2 | csdr shift_addition_cc 0.2 | (gksu touch; sudo rpitx -i- -m IQFLOAT -f %TXFREQ_SSB%)\""
 #define CMD_TX_CW   "pgroup bash -c \"%ARECORD% | csdr convert_i16_f | csdr dsb_fc | csdr bandpass_fir_fft_cc 0 0.1 0.01 | csdr gain_ff 2 | csdr shift_addition_cc 0.2 | (gksu touch; sudo rpitx -i- -m IQFLOAT -f %TXFREQ_SSB%)\""
+#define CMD_TX_DSP  "pgroup bash -c \"%ARECORD% | csdr convert_i16_f | csdr dsb_fc | csdr bandpass_fir_fft_cc 0 0.1 0.01 | csdr gain_ff 2 | csdr shift_addition_cc 0.2 | (gksu touch; sudo rpitx -i- -m IQFLOAT -f %TXFREQ_SSB%)\""
+#define CMD_TX_PKT  "pgroup bash -c \"%ARECORD% | csdr convert_i16_f | csdr dsb_fc | csdr bandpass_fir_fft_cc 0 0.1 0.01 | csdr gain_ff 2 | csdr shift_addition_cc 0.2 | (gksu touch; sudo rpitx -i- -m IQFLOAT -f %TXFREQ_SSB%)\""
 
 #define NMUX_MEMORY_MBYTE 50
 
@@ -132,11 +136,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     ui->labelVFO->setHidden(true);
-    ui->labelSPLIT->setHidden(true);
-    ui->labelBRK->setHidden(true);
-    ui->labelRIT->setHidden(true);
-    ui->labelLOCK->setHidden(true);
-    ui->labelKEY->setHidden(true);
     ui->labelMODE->setHidden(true);
     ui->labelMETER->setHidden(true);
     ui->progressBarMeter->setHidden(true);
@@ -194,6 +193,12 @@ MainWindow::MainWindow(QWidget *parent) :
     modsButtons.append(ui->toggleWFM);
     modsButtons.append(ui->toggleLSB);
     modsButtons.append(ui->toggleUSB);
+    modsButtons.append(ui->toggleCW);
+    modsButtons.append(ui->toggleCWR);
+    modsButtons.append(ui->toggleDSP);
+    modsButtons.append(ui->togglePKT);
+
+
 
     connect(&tmrRead, SIGNAL(timeout()), this, SLOT(tmrRead_timeout()));
     connect(ui->widgetFFT, SIGNAL(shiftChanged(int)), this, SLOT(on_shiftChanged(int)));
@@ -251,7 +256,11 @@ void MainWindow::CATchangeStatus() {
 
 }
 void MainWindow::CATchangeMode() {
-    //qDebug() << "changeMode()";
+
+    qDebug() << "changeMode()" << cat->MODE ;
+    fchangeMode=true;
+
+
 
 }
 void MainWindow::CATgetRX() {
@@ -337,14 +346,36 @@ void MainWindow::readData()
     if (cat->n==5) {
        char buffer[18];
        cat->hex2str(&buffer[0],&cat->rxBuffer[0],cat->n);
-       fprintf (stderr,"readData(): Received Serial hex2str (%s)\n",buffer);
+       //fprintf (stderr,"readData(): Received Serial hex2str (%s)\n",buffer);
        cat->processCAT(&cat->rxBuffer[0]);
        cat->n=0;
+       if (cat->fchangeFreq==true) {
+          qDebug() << "readData(): changeFreq " << cat->SetFrequency;
+          cat->fchangeFreq=false;
+          ui->spinFreq->setValue(cat->SetFrequency);
+          //on_spinFreq_valueChanged(ui->spinFreq->value());
+       }
+       if (cat->fchangeMode==true) {
+          cat->fchangeMode=false;
+          qDebug() << "readData(): fchangeModeDetected" << cat->MODE;
+          switch(cat->MODE) {
+             case MLSB : {untoggleOtherModButtonsThan(ui->toggleLSB); break;}
+             case MUSB : {untoggleOtherModButtonsThan(ui->toggleUSB); break;}
+             case MCW  : {untoggleOtherModButtonsThan(ui->toggleCW); break;}
+             case MCWR : {untoggleOtherModButtonsThan(ui->toggleCWR); break;}
+             case MAM  : {untoggleOtherModButtonsThan(ui->toggleAM); break;}
+             case MFM  : {untoggleOtherModButtonsThan(ui->toggleNFM); break;}
+             case MWFM : {untoggleOtherModButtonsThan(ui->toggleWFM); break;}
+             case MDIG : {untoggleOtherModButtonsThan(ui->toggleDSP); break;}
+             case MPKT : {untoggleOtherModButtonsThan(ui->togglePKT); break;}
+          }
+       }
+
        ui->labelCAT->setStyleSheet("QLabel { background-color : cyan; }");
        TCAT=20;
        if (cat->bufLen!=0) {
           cat->hex2str(&buffer[0],&cat->bufChar[0],cat->bufLen);
-          fprintf (stderr,"readData(): Response produced hex2str (%s)\n",buffer);
+          //fprintf (stderr,"readData(): Response produced hex2str (%s)\n",buffer);
           m_serial->write((char*)&cat->bufChar[0],cat->bufLen);
           cat->bufLen=0;
        }
@@ -385,6 +416,17 @@ void MainWindow::untoggleOtherModButtonsThan(QPushButton* pb)
     }
 
     updateFilterBw();
+
+    if (ui->toggleLSB->isChecked()) {cat->MODE=MLSB;}
+    if (ui->toggleUSB->isChecked()) {cat->MODE=MUSB;}
+    if (ui->toggleCW->isChecked())  {cat->MODE=MCW;}
+    if (ui->toggleCWR->isChecked()) {cat->MODE=MCWR;}
+    if (ui->toggleAM->isChecked())  {cat->MODE=MAM;}
+    if (ui->toggleWFM->isChecked()) {cat->MODE=MWFM;}
+    if (ui->toggleNFM->isChecked()) {cat->MODE=MFM;}
+    if (ui->toggleDSP->isChecked()) {cat->MODE=MDIG;}
+    if (ui->togglePKT->isChecked()) {cat->MODE=MPKT;}
+
 }
 
 void MainWindow::redirectProcessOutput(QProcess &proc, bool onlyStdErr)
@@ -424,6 +466,10 @@ void MainWindow::on_toggleNFM_toggled(bool checked) { untoggleOtherModButtonsTha
 void MainWindow::on_toggleAM_toggled(bool checked)  { untoggleOtherModButtonsThan(ui->toggleAM); }
 void MainWindow::on_toggleUSB_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleUSB); }
 void MainWindow::on_toggleLSB_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleLSB); }
+void MainWindow::on_toggleCW_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleCW); }
+void MainWindow::on_toggleCWR_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleCWR); }
+void MainWindow::on_toggleDSP_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleDSP); }
+void MainWindow::on_togglePKT_toggled(bool checked) { untoggleOtherModButtonsThan(ui->togglePKT); }
 
 void MainWindow::on_shiftChanged(int newOffset)
 {
@@ -440,6 +486,8 @@ QString MainWindow::getDemodulatorCommand()
     if(ui->toggleUSB->isChecked()) myDemodCmd=CMD_MOD_USB;
     if(ui->toggleCW->isChecked())  myDemodCmd=CMD_MOD_CW;
     if(ui->toggleCWR->isChecked()) myDemodCmd=CMD_MOD_CWR;
+    if(ui->toggleDSP->isChecked()) myDemodCmd=CMD_MOD_DSP;
+    if(ui->togglePKT->isChecked()) myDemodCmd=CMD_MOD_PKT;
    
     myDemodCmd=myDemodCmd
             .replace("%FIFO%", fifoPipePath)
@@ -459,8 +507,10 @@ QString MainWindow::getModulatorCommand()
     if(ui->toggleAM->isChecked())  myModCmd=CMD_TX_AM;
     if(ui->toggleLSB->isChecked()) myModCmd=CMD_TX_LSB;
     if(ui->toggleUSB->isChecked()) myModCmd=CMD_TX_USB;
-    if(ui->toggleUSB->isChecked()) myModCmd=CMD_TX_CW;
-    if(ui->toggleUSB->isChecked()) myModCmd=CMD_TX_CWR;
+    if(ui->toggleCW->isChecked()) myModCmd=CMD_TX_CW;
+    if(ui->toggleCWR->isChecked()) myModCmd=CMD_TX_CWR;
+    if(ui->toggleDSP->isChecked()) myModCmd=CMD_TX_DSP;
+    if(ui->togglePKT->isChecked()) myModCmd=CMD_TX_PKT;
     myModCmd=myModCmd
             .replace("%ARECORD%", CMD_ARECORD)
             .replace("%ADEVICE%", (alsaDevice.isEmpty())?"":"-D "+alsaDevice)
@@ -483,6 +533,8 @@ void MainWindow::updateFilterBw()
     if(ui->toggleUSB->isChecked()) { ui->widgetFFT->filterLowCut=0; ui->widgetFFT->filterHighCut=4000; }
     if(ui->toggleCW->isChecked())  { ui->widgetFFT->filterLowCut=0; ui->widgetFFT->filterHighCut=600; }
     if(ui->toggleCWR->isChecked()) { ui->widgetFFT->filterLowCut=-600; ui->widgetFFT->filterHighCut=0; }
+    if(ui->toggleDSP->isChecked()) { ui->widgetFFT->filterLowCut=0; ui->widgetFFT->filterHighCut=4000; }
+    if(ui->togglePKT->isChecked()) { ui->widgetFFT->filterLowCut=0; ui->widgetFFT->filterHighCut=4000; }
 }
 
 void MainWindow::on_toggleRun_toggled(bool checked)
@@ -530,11 +582,6 @@ void MainWindow::on_toggleRun_toggled(bool checked)
         ui->labelPWR->setHidden(false);
         ui->labelPTT->setHidden(false);
         ui->labelVFO->setHidden(false);
-        ui->labelSPLIT->setHidden(false);
-        ui->labelRIT->setHidden(false);
-        ui->labelLOCK->setHidden(false);
-        ui->labelBRK->setHidden(false);
-        ui->labelKEY->setHidden(false);
         ui->labelMODE->setHidden(false);
         ui->labelMETER->setHidden(false);
         ui->progressBarMeter->setHidden(false);
@@ -561,11 +608,6 @@ void MainWindow::on_toggleRun_toggled(bool checked)
         //ui->labelPTT->setHidden(true);
 
         ui->labelVFO->setHidden(true);
-        ui->labelSPLIT->setHidden(true);
-        ui->labelRIT->setHidden(true);
-        ui->labelLOCK->setHidden(true);
-        ui->labelBRK->setHidden(true);
-        ui->labelKEY->setHidden(true);
         ui->labelMODE->setHidden(true);
         ui->labelMETER->setHidden(true);
         ui->progressBarMeter->setHidden(true);
@@ -625,13 +667,13 @@ void MainWindow::on_lcdNumberPanel_valueChanged(int val)
 }
 void MainWindow::on_spinFreq_valueChanged(int val)
 {
+    qDebug() << "on_spinFreq_valueChanged() " << val;
     ui->spinCenter->setValue(ui->spinFreq->value()-ui->spinOffset->value());
-//    ui->lcdNumberPanel->setSmallDecimalPoint(true);
-//    ui->lcdNumberPanel->display(float(val/1000));  //* Intervention to update LCD
-    //sprintf(hi,"%8.2f",float(val/1000));
-    //ui->lcdNumberPanel->display(hi);  //* Intervention to update LCD
-    sendCommand(RTLTCP_SET_FREQ, ui->spinCenter->value());
 
+    sendCommand(RTLTCP_SET_FREQ, ui->spinCenter->value());
+    if (cat->SetFrequency != ui->spinFreq->value()) {
+        cat->SetFrequency=ui->spinFreq->value();
+    }
     //procDemod.write("\x01\x05\x55\xa9\x60");
     //procDemod.write("macska\n");
 }
