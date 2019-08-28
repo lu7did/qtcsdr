@@ -54,7 +54,7 @@ void setWord(unsigned char* SysWord,unsigned char v, bool val) {
 #include <wiringPi.h>
 #include <wiringSerial.h>
 #include "../PixiePi/src/lib/CAT817.h"
-
+#include <QTimer>
 
 CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
 
@@ -120,6 +120,32 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow), qStdOut(stdout),m_serial(new QSerialPort(this)) 
 {
     ui->setupUi(this);
+
+
+    ui->labelCAT->setHidden(false);
+    ui->labelPWR->setHidden(false);
+    ui->labelPTT->setHidden(false);
+    ui->labelCAT->setStyleSheet("QLabel { background-color : gray; }");
+    ui->labelPWR->setStyleSheet("QLabel { background-color : gray; }");
+    ui->labelPTT->setStyleSheet("QLabel { background-color : gray; }");
+
+
+
+    ui->labelVFO->setHidden(true);
+    ui->labelSPLIT->setHidden(true);
+    ui->labelBRK->setHidden(true);
+    ui->labelRIT->setHidden(true);
+    ui->labelLOCK->setHidden(true);
+    ui->labelKEY->setHidden(true);
+    ui->labelMODE->setHidden(true);
+    ui->labelMETER->setHidden(true);
+    ui->progressBarMeter->setHidden(true);
+
+
+
+    QTimer *t = new QTimer(this);
+    connect(t,SIGNAL(timeout()),this,SLOT(handleTimer()));
+    t->start(100);
 
     if(QCoreApplication::arguments().contains("--rpitx"))
     {
@@ -238,6 +264,36 @@ void MainWindow::CATgetTX() {
 }
 
 
+void MainWindow::handleTimer() {
+
+   if (TCAT!=0) {
+      TCAT--;
+      if(TCAT==0) {
+        if(ui->toggleRun->isChecked()) {
+          ui->labelCAT->setStyleSheet("QLabel { background-color : #0000FF; }");
+        } else {
+          ui->labelCAT->setStyleSheet("QLabel { background-color : gray; }");
+        }
+
+      }
+   }
+   if (TBRK!=0) {
+      TBRK--;
+      if(TBRK==0) {
+
+      }
+   }
+
+
+   if (TSEC!=0) {
+      TSEC--;
+      if (TSEC==0) {
+         TSEC=10;
+      }
+   }
+
+}
+
 void MainWindow::writeChar(byte d) 
 
 {
@@ -284,6 +340,8 @@ void MainWindow::readData()
        fprintf (stderr,"readData(): Received Serial hex2str (%s)\n",buffer);
        cat->processCAT(&cat->rxBuffer[0]);
        cat->n=0;
+       ui->labelCAT->setStyleSheet("QLabel { background-color : cyan; }");
+       TCAT=20;
        if (cat->bufLen!=0) {
           cat->hex2str(&buffer[0],&cat->bufChar[0],cat->bufLen);
           fprintf (stderr,"readData(): Response produced hex2str (%s)\n",buffer);
@@ -465,8 +523,26 @@ void MainWindow::on_toggleRun_toggled(bool checked)
 // Initialize CAT system
 
         cat->SetFrequency=ui->spinFreq->value();
-
         updateFilterBw();
+
+
+        ui->labelCAT->setHidden(false);
+        ui->labelPWR->setHidden(false);
+        ui->labelPTT->setHidden(false);
+        ui->labelVFO->setHidden(false);
+        ui->labelSPLIT->setHidden(false);
+        ui->labelRIT->setHidden(false);
+        ui->labelLOCK->setHidden(false);
+        ui->labelBRK->setHidden(false);
+        ui->labelKEY->setHidden(false);
+        ui->labelMODE->setHidden(false);
+        ui->labelMETER->setHidden(false);
+        ui->progressBarMeter->setHidden(false);
+
+        ui->labelCAT->setStyleSheet("QLabel { background-color : #0000FF; }");
+        ui->labelPWR->setStyleSheet("QLabel { background-color : #32CD32; }");
+        ui->labelPTT->setStyleSheet("QLabel { background-color : #800000; }");
+
     }
     else
     {
@@ -479,6 +555,28 @@ void MainWindow::on_toggleRun_toggled(bool checked)
         this-> closeSerialPort();
         procFFT.readAll();
         FFTDataBuffer.clear();
+
+        //ui->labelCAT->setHidden(true);
+        //ui->labelPWR->setHidden(true);
+        //ui->labelPTT->setHidden(true);
+
+        ui->labelVFO->setHidden(true);
+        ui->labelSPLIT->setHidden(true);
+        ui->labelRIT->setHidden(true);
+        ui->labelLOCK->setHidden(true);
+        ui->labelBRK->setHidden(true);
+        ui->labelKEY->setHidden(true);
+        ui->labelMODE->setHidden(true);
+        ui->labelMETER->setHidden(true);
+        ui->progressBarMeter->setHidden(true);
+
+
+        ui->labelCAT->setStyleSheet("QLabel { background-color : gray; }");
+        ui->labelPWR->setStyleSheet("QLabel { background-color : gray; }");
+        ui->labelPTT->setStyleSheet("QLabel { background-color : gray; }");
+
+
+
     }
 }
 

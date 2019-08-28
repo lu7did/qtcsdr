@@ -95,11 +95,12 @@ private slots:
     void openSerialPort();
     void closeSerialPort();
     //void about();
+//*----------------
     void writeData(const QByteArray &data);
     void writeChar(byte d);
     void readData();
-
     void handleError(QSerialPort::SerialPortError error);
+    void handleTimer();
 
 private:
     Ui::MainWindow *ui;
@@ -135,7 +136,9 @@ private:
     QString audioRecordCommand;
     QString alsaDevice;
 
-
+    int TSEC=10;
+    int TCAT=20;
+    int TBRK=30;
 
     QSerialPort *m_serial = nullptr;
 
