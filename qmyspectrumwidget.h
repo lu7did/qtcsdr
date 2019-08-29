@@ -44,7 +44,10 @@ public:
     QImage* spectrumImage;
     QImage* oneLineOfSpectrum;
     bool takeOneWaterfallLine(QByteArray* from);
+    int getRectX();
+    int getRectW();
     int FFTSize;
+    float signalPower;
     int sampleRate;
     int offsetFreq;
     int filterLowCut;

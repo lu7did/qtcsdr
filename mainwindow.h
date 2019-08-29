@@ -53,8 +53,12 @@ bool getWord (unsigned char SysWord, unsigned char v);
 
 #define RTLTCP_SET_FREQ 0x1
 #define RTLTCP_SET_DIRECT_SAMPLING 0x9
-
-
+#define SMETER_CALLIBRATION -20
+#define STEP100HZ  100
+#define STEP1KHZ   1000
+#define STEP10KHZ  10000
+#define STEP100KHZ 100000
+#define STEP1MHZ   1000000
 
 namespace Ui {
 
@@ -95,8 +99,9 @@ private slots:
     void on_comboDirectSamp_currentIndexChanged(int index);
 
     void on_toggleTransmit_toggled(bool checked);
+    void on_valueChanged(int v);
 
-
+    int  power2S(float s);
     void openSerialPort();
     void closeSerialPort();
     //void about();
@@ -131,6 +136,7 @@ private:
     QProcess procIQServer;
     QProcess procFFT;
     QProcess procTX;
+    //QProcess procMtr;
     QProcess procKillTX;
     QString fifoPipePath;
 
@@ -138,6 +144,9 @@ private:
     QTimer tmrRead;
     QTextStream qStdOut;
     QByteArray FFTDataBuffer;
+
+    //QByteArray MTRDataBuffer;
+
     QString audioPlayerCommand;
     QString audioRecordCommand;
     QString alsaDevice;
@@ -151,8 +160,11 @@ private:
 
     QSerialPort *m_serial = nullptr;
 
-
-
+    int  dialAnt=0;
+    int  dialDelta=0;
+    bool dialChanged=false;
+    int  TDIAL=10;
+    int  dialStep=STEP100HZ;
 };
 
 #endif // MAINWINDOW_H

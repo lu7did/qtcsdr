@@ -72,7 +72,7 @@ CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
 
 #define CMD_IQSERVER "pgroup -9 rtl_tcp -a 127.0.0.1 -s %SAMP_RATE% -p 4950 -f 89500000"
 #define CMD_DISTRIB "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4950; sleep .3; done) | nmux -p 4951 -a 127.0.0.1 -b %NMUX_BUFSIZE% -n %NMUX_BUFCNT%\""
-#define CMD_MOD_WFM "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %WFM_DECIM% 0.05 HAMMING  | csdr tee /tmp/qtcsdr_power | csdr fmdemod_quadri_cf | csdr fractional_decimator_ff 5 | csdr deemphasis_wfm_ff 48000 50e-6 | csdr convert_f_i16 |  %AUDIOPLAYER%\""
+#define CMD_MOD_WFM "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %WFM_DECIM% 0.05 HAMMING  | csdr fmdemod_quadri_cf | csdr fractional_decimator_ff 5 | csdr deemphasis_wfm_ff 48000 50e-6 | csdr convert_f_i16 |  %AUDIOPLAYER%\""
 #define CMD_MOD_NFM "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %DECIM% 0.005 HAMMING | csdr fmdemod_quadri_cf | csdr limit_ff | csdr deemphasis_nfm_ff 48000 | csdr fastagc_ff | csdr convert_f_i16 |       %AUDIOPLAYER%\""
 #define CMD_MOD_AM  "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %DECIM% 0.005 HAMMING | csdr amdemod_cf | csdr fastdcblock_ff | csdr agc_ff | csdr limit_ff | csdr convert_f_i16 |                           %AUDIOPLAYER%\""
 #define CMD_MOD_USB "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %DECIM% 0.005 HAMMING | csdr bandpass_fir_fft_cc 0 0.1 0.05 | csdr realpart_cf | csdr agc_ff | csdr limit_ff | csdr convert_f_i16 |          %AUDIOPLAYER%\""
@@ -82,6 +82,7 @@ CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
 #define CMD_MOD_CWR "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %DECIM% 0.005 HAMMING | csdr bandpass_fir_fft_cc -0.1 0 0.05 | csdr realpart_cf | csdr agc_ff | csdr limit_ff | csdr convert_f_i16 |         %AUDIOPLAYER%\""
 #define CMD_MOD_DSP "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %DECIM% 0.005 HAMMING | csdr bandpass_fir_fft_cc 0 0.1 0.05 | csdr realpart_cf | csdr agc_ff | csdr limit_ff | csdr convert_f_i16 |          %AUDIOPLAYER%\""
 #define CMD_MOD_PKT "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %DECIM% 0.005 HAMMING | csdr bandpass_fir_fft_cc 0 0.1 0.05 | csdr realpart_cf | csdr agc_ff | csdr limit_ff | csdr convert_f_i16 |          %AUDIOPLAYER%\""
+
 
 #define CMD_ARECORD "arecord %ADEVICE% -f S16_LE -r 48000 -c 1"
 
@@ -129,11 +130,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->labelCAT->setHidden(false);
     ui->labelPWR->setHidden(false);
     ui->labelPTT->setHidden(false);
-    ui->labelCAT->setStyleSheet("QLabel { background-color : gray; }");
-    ui->labelPWR->setStyleSheet("QLabel { background-color : gray; }");
-    ui->labelPTT->setStyleSheet("QLabel { background-color : gray; }");
+    ui->labelCAT->setStyleSheet("QLabel { background-color : blue; }");
+    ui->labelPWR->setStyleSheet("QLabel { background-color : green; }");
+    ui->labelPTT->setStyleSheet("QLabel { background-color : #800000; }");
 
-
+    ui->progressBarMeter->setMinimum(0);
+    ui->progressBarMeter->setMaximum(15);
 
     ui->labelVFO->setHidden(true);
     ui->labelMODE->setHidden(true);
@@ -141,6 +143,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->progressBarMeter->setHidden(true);
 
 
+    ui->dial->setMinimum(0);
+    ui->dial->setMaximum(100);
+    ui->dial->setWrapping(false);
+    ui->dial->setEnabled(false);
+    dialAnt=ui->dial->value();
+    dialDelta=0;
+    dialChanged=false;
+    TDIAL=3;
+
+    connect(ui->dial,SIGNAL(valueChanged(int)),this,SLOT(on_valueChanged(int)));
 
     QTimer *t = new QTimer(this);
     connect(t,SIGNAL(timeout()),this,SLOT(handleTimer()));
@@ -161,6 +173,7 @@ MainWindow::MainWindow(QWidget *parent) :
     cat->changeFreq=(CALLBACK)&MainWindow::CATchangeFreq;
     cat->changeStatus=(CALLBACK)&MainWindow::CATchangeStatus;
     cat->changeMode=(CALLBACK)&MainWindow::CATchangeMode;
+    cat->METER=0x00;
 
     if(QCoreApplication::arguments().contains("--mplayer"))
     {
@@ -204,8 +217,52 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->widgetFFT, SIGNAL(shiftChanged(int)), this, SLOT(on_shiftChanged(int)));
     tmrRead.start(10);
     //connect(m_ui->actionConnect, &QAction::triggered, this, &MainWindow::openSerialPort);
+    ui->lcdNumberPanel->setStyleSheet("QLabel { background-color : #FFCF9E; }");
+
 }
 
+void MainWindow::on_valueChanged(int v) {
+
+    if (v==0 && this->dialAnt==100) {
+       this->dialDelta++;
+       this->dialAnt=v;
+       this->dialChanged=true;
+       qDebug() << "dialDelta ClockWise" << v << this->dialAnt << this->dialDelta;
+
+       TDIAL=3;
+       return;
+    }
+
+    if (this->dialAnt==0 && v==100) {
+       this->dialDelta--;
+
+       this->dialAnt=v;
+       this->dialChanged=true;
+       qDebug() << "dialDelta Counter ClockWise" << v << this->dialAnt << this->dialDelta;
+
+       TDIAL=3;
+       return;
+    }
+
+    if (v>this->dialAnt) {
+      this->dialDelta=this->dialDelta+(v-this->dialAnt);
+      this->dialAnt=v;
+      this->dialChanged=true;
+      qDebug() << "dialDelta ClockWise" << v << this->dialAnt << this->dialDelta;
+
+      TDIAL=3;
+      return;
+    }
+    if (v<this->dialAnt) {
+      this->dialDelta=this->dialDelta+(v-this->dialAnt);
+      qDebug() << "dialDelta Counter ClockWise" << v << this->dialAnt << this->dialDelta;
+      this->dialAnt=v;
+      this->dialChanged=true;
+      TDIAL=3;
+      return;
+    }
+
+}
 void MainWindow::openSerialPort()
 {
     //const SettingsDialog::Settings p = m_settings->settings();
@@ -281,7 +338,7 @@ void MainWindow::handleTimer() {
         if(ui->toggleRun->isChecked()) {
           ui->labelCAT->setStyleSheet("QLabel { background-color : #0000FF; }");
         } else {
-          ui->labelCAT->setStyleSheet("QLabel { background-color : gray; }");
+          ui->labelCAT->setStyleSheet("QLabel { background-color : blue; }");
         }
 
       }
@@ -301,6 +358,18 @@ void MainWindow::handleTimer() {
       }
    }
 
+   if (TDIAL!=0) {
+      TDIAL--;
+      if (TDIAL==0) {
+         if (this->dialChanged == true) {
+            ui->spinFreq->setValue(ui->spinFreq->value()+(this->dialDelta*this->dialStep));
+            //qDebug() << "Dial changed offset" << dialDelta << ui->spinFreq->value();;
+
+         }
+         this->dialChanged=false;
+         this->dialDelta=0;
+      }
+   }
 }
 
 void MainWindow::writeChar(byte d) 
@@ -357,6 +426,7 @@ void MainWindow::readData()
        }
        if (cat->fchangeMode==true) {
           cat->fchangeMode=false;
+
           qDebug() << "readData(): fchangeModeDetected" << cat->MODE;
           switch(cat->MODE) {
              case MLSB : {untoggleOtherModButtonsThan(ui->toggleLSB); break;}
@@ -413,19 +483,20 @@ void MainWindow::untoggleOtherModButtonsThan(QPushButton* pb)
         procDemod.start(getDemodulatorCommand());
         procDemod.waitForStarted(1000);
         setShift();
+        ui->dial->setEnabled(true);
     }
 
     updateFilterBw();
 
-    if (ui->toggleLSB->isChecked()) {cat->MODE=MLSB;}
-    if (ui->toggleUSB->isChecked()) {cat->MODE=MUSB;}
-    if (ui->toggleCW->isChecked())  {cat->MODE=MCW;}
-    if (ui->toggleCWR->isChecked()) {cat->MODE=MCWR;}
-    if (ui->toggleAM->isChecked())  {cat->MODE=MAM;}
-    if (ui->toggleWFM->isChecked()) {cat->MODE=MWFM;}
-    if (ui->toggleNFM->isChecked()) {cat->MODE=MFM;}
-    if (ui->toggleDSP->isChecked()) {cat->MODE=MDIG;}
-    if (ui->togglePKT->isChecked()) {cat->MODE=MPKT;}
+    if (ui->toggleLSB->isChecked()) {cat->MODE=MLSB;ui->labelMODE->setText("LSB");dialStep=STEP100HZ;}
+    if (ui->toggleUSB->isChecked()) {cat->MODE=MUSB;ui->labelMODE->setText("USB");dialStep=STEP100HZ;}
+    if (ui->toggleCW->isChecked())  {cat->MODE=MCW;ui->labelMODE->setText("CW");dialStep=STEP100HZ;}
+    if (ui->toggleCWR->isChecked()) {cat->MODE=MCWR;ui->labelMODE->setText("CWR");dialStep=STEP100HZ;}
+    if (ui->toggleAM->isChecked())  {cat->MODE=MAM;ui->labelMODE->setText("AM");dialStep=STEP10KHZ;}
+    if (ui->toggleWFM->isChecked()) {cat->MODE=MWFM;ui->labelMODE->setText("WFM");dialStep=STEP100KHZ;}
+    if (ui->toggleNFM->isChecked()) {cat->MODE=MFM;ui->labelMODE->setText("FM");dialStep=STEP10KHZ;}
+    if (ui->toggleDSP->isChecked()) {cat->MODE=MDIG;ui->labelMODE->setText("DSP");dialStep=STEP100HZ;}
+    if (ui->togglePKT->isChecked()) {cat->MODE=MPKT;ui->labelMODE->setText("PKT");dialStep=STEP100HZ;}
 
 }
 
@@ -439,6 +510,26 @@ void MainWindow::redirectProcessOutput(QProcess &proc, bool onlyStdErr)
     qStdOut.flush();
 }
 
+int  MainWindow::power2S(float s) {
+
+     if (s<=-126) return 0;
+     if (s<=-121) return 1;
+     if (s<=-115) return 2;
+     if (s<=-109) return 3;
+     if (s<=-103) return 4;
+     if (s<=-97) return 5;
+     if (s<=-91) return 6;
+     if (s<=-85) return 7;
+     if (s<=-79) return 8;
+     if (s<=-73) return 9;
+     if (s<=-63) return 10;
+     if (s<=-53) return 11;
+     if (s<=-43) return 12;
+     if (s<=-33) return 13;
+     if (s<=-23) return 14;
+
+     return 15;
+}    
 void MainWindow::tmrRead_timeout()
 {
     redirectProcessOutput(procDemod);
@@ -451,7 +542,28 @@ void MainWindow::tmrRead_timeout()
     {
         FFTDataBuffer += procFFT.readAll();
         while(ui->widgetFFT->takeOneWaterfallLine(&FFTDataBuffer));
+        int SUnit=this->power2S(ui->widgetFFT->signalPower+SMETER_CALLIBRATION);
+        cat->METER=SUnit;
+        
+        ui->progressBarMeter->setStyleSheet("::chunk {"
+                    "background-color: "
+                    "qlineargradient(x0: 0, x2: 1, "
+                    "stop: 0 green, stop: 0.6 green, "
+                    "stop: 0.8 orange, "
+                    "stop: 1 red"
+                    ")}");
+        //if (SUnit<=9) {
+        //   ui->progressBarMeter->setStyleSheet("QProgressBar::chunk { color : green }");
+        //} else {
+        //   if (SUnit>9 && SUnit<=12) {
+        //      ui->progressBarMeter->setStyleSheet("QProgressBar::chunk { color : yellow }");
+        //   } else {
+        //      ui->progressBarMeter->setStyleSheet("QProgressBar::chunk { color : red }");
+        //   }
+        //}
+        ui->progressBarMeter->setValue(SUnit);
     }
+
 
 }
 
@@ -485,6 +597,7 @@ QString MainWindow::getDemodulatorCommand()
     if(ui->toggleLSB->isChecked()) myDemodCmd=CMD_MOD_LSB;
     if(ui->toggleUSB->isChecked()) myDemodCmd=CMD_MOD_USB;
     if(ui->toggleCW->isChecked())  myDemodCmd=CMD_MOD_CW;
+
     if(ui->toggleCWR->isChecked()) myDemodCmd=CMD_MOD_CWR;
     if(ui->toggleDSP->isChecked()) myDemodCmd=CMD_MOD_DSP;
     if(ui->togglePKT->isChecked()) myDemodCmd=CMD_MOD_PKT;
@@ -566,17 +679,19 @@ void MainWindow::on_toggleRun_toggled(bool checked)
         qDebug() << "FFTCommand" << FFTCommand;
         procFFT.start(FFTCommand);
 
+//*--- Start listening for CAT commands on serial port or internal pipe and init CAT system
+
         this->openSerialPort();
+        cat->SetFrequency=ui->spinFreq->value();
+
 
         on_spinFreq_valueChanged(ui->spinFreq->value());
         on_lcdNumberPanel_valueChanged(ui->spinFreq->value());
         on_comboDirectSamp_currentIndexChanged(0);
 
-// Initialize CAT system
-
-        cat->SetFrequency=ui->spinFreq->value();
         updateFilterBw();
 
+//*--- GUI activation
 
         ui->labelCAT->setHidden(false);
         ui->labelPWR->setHidden(false);
@@ -589,6 +704,7 @@ void MainWindow::on_toggleRun_toggled(bool checked)
         ui->labelCAT->setStyleSheet("QLabel { background-color : #0000FF; }");
         ui->labelPWR->setStyleSheet("QLabel { background-color : #32CD32; }");
         ui->labelPTT->setStyleSheet("QLabel { background-color : #800000; }");
+        ui->dial->setEnabled(true);
 
     }
     else
@@ -602,6 +718,7 @@ void MainWindow::on_toggleRun_toggled(bool checked)
         this-> closeSerialPort();
         procFFT.readAll();
         FFTDataBuffer.clear();
+        ui->dial->setEnabled(false);
 
         //ui->labelCAT->setHidden(true);
         //ui->labelPWR->setHidden(true);
@@ -612,12 +729,9 @@ void MainWindow::on_toggleRun_toggled(bool checked)
         ui->labelMETER->setHidden(true);
         ui->progressBarMeter->setHidden(true);
 
-
-        ui->labelCAT->setStyleSheet("QLabel { background-color : gray; }");
-        ui->labelPWR->setStyleSheet("QLabel { background-color : gray; }");
-        ui->labelPTT->setStyleSheet("QLabel { background-color : gray; }");
-
-
+        ui->labelCAT->setStyleSheet("QLabel { background-color : blue; }");
+        ui->labelPWR->setStyleSheet("QLabel { background-color : green; }");
+        ui->labelPTT->setStyleSheet("QLabel { background-color : #800000; }");
 
     }
 }

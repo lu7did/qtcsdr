@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[38];
-    char stringdata0[600];
+    QByteArrayData data[42];
+    char stringdata0[628];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -55,18 +55,22 @@ QT_MOC_LITERAL(22, 371, 26), // "on_spinCenter_valueChanged"
 QT_MOC_LITERAL(23, 398, 38), // "on_comboDirectSamp_currentInd..."
 QT_MOC_LITERAL(24, 437, 5), // "index"
 QT_MOC_LITERAL(25, 443, 25), // "on_toggleTransmit_toggled"
-QT_MOC_LITERAL(26, 469, 14), // "openSerialPort"
-QT_MOC_LITERAL(27, 484, 15), // "closeSerialPort"
-QT_MOC_LITERAL(28, 500, 9), // "writeData"
-QT_MOC_LITERAL(29, 510, 4), // "data"
-QT_MOC_LITERAL(30, 515, 9), // "writeChar"
-QT_MOC_LITERAL(31, 525, 4), // "byte"
-QT_MOC_LITERAL(32, 530, 1), // "d"
-QT_MOC_LITERAL(33, 532, 8), // "readData"
-QT_MOC_LITERAL(34, 541, 11), // "handleError"
-QT_MOC_LITERAL(35, 553, 28), // "QSerialPort::SerialPortError"
-QT_MOC_LITERAL(36, 582, 5), // "error"
-QT_MOC_LITERAL(37, 588, 11) // "handleTimer"
+QT_MOC_LITERAL(26, 469, 15), // "on_valueChanged"
+QT_MOC_LITERAL(27, 485, 1), // "v"
+QT_MOC_LITERAL(28, 487, 7), // "power2S"
+QT_MOC_LITERAL(29, 495, 1), // "s"
+QT_MOC_LITERAL(30, 497, 14), // "openSerialPort"
+QT_MOC_LITERAL(31, 512, 15), // "closeSerialPort"
+QT_MOC_LITERAL(32, 528, 9), // "writeData"
+QT_MOC_LITERAL(33, 538, 4), // "data"
+QT_MOC_LITERAL(34, 543, 9), // "writeChar"
+QT_MOC_LITERAL(35, 553, 4), // "byte"
+QT_MOC_LITERAL(36, 558, 1), // "d"
+QT_MOC_LITERAL(37, 560, 8), // "readData"
+QT_MOC_LITERAL(38, 569, 11), // "handleError"
+QT_MOC_LITERAL(39, 581, 28), // "QSerialPort::SerialPortError"
+QT_MOC_LITERAL(40, 610, 5), // "error"
+QT_MOC_LITERAL(41, 616, 11) // "handleTimer"
 
     },
     "MainWindow\0on_toggleWFM_toggled\0\0"
@@ -82,10 +86,11 @@ QT_MOC_LITERAL(37, 588, 11) // "handleTimer"
     "arg1\0on_spinCenter_valueChanged\0"
     "on_comboDirectSamp_currentIndexChanged\0"
     "index\0on_toggleTransmit_toggled\0"
-    "openSerialPort\0closeSerialPort\0writeData\0"
-    "data\0writeChar\0byte\0d\0readData\0"
-    "handleError\0QSerialPort::SerialPortError\0"
-    "error\0handleTimer"
+    "on_valueChanged\0v\0power2S\0s\0openSerialPort\0"
+    "closeSerialPort\0writeData\0data\0writeChar\0"
+    "byte\0d\0readData\0handleError\0"
+    "QSerialPort::SerialPortError\0error\0"
+    "handleTimer"
 };
 #undef QT_MOC_LITERAL
 
@@ -95,7 +100,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      26,   14, // methods
+      28,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -103,32 +108,34 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,  144,    2, 0x08 /* Private */,
-       4,    1,  147,    2, 0x08 /* Private */,
-       5,    1,  150,    2, 0x08 /* Private */,
-       6,    1,  153,    2, 0x08 /* Private */,
-       7,    1,  156,    2, 0x08 /* Private */,
-       8,    1,  159,    2, 0x08 /* Private */,
-       9,    1,  162,    2, 0x08 /* Private */,
-      10,    1,  165,    2, 0x08 /* Private */,
-      11,    1,  168,    2, 0x08 /* Private */,
-      12,    1,  171,    2, 0x08 /* Private */,
-      13,    1,  174,    2, 0x08 /* Private */,
-      15,    1,  177,    2, 0x08 /* Private */,
-      16,    0,  180,    2, 0x08 /* Private */,
-      17,    0,  181,    2, 0x08 /* Private */,
-      18,    1,  182,    2, 0x08 /* Private */,
-      20,    1,  185,    2, 0x08 /* Private */,
-      22,    1,  188,    2, 0x08 /* Private */,
-      23,    1,  191,    2, 0x08 /* Private */,
-      25,    1,  194,    2, 0x08 /* Private */,
-      26,    0,  197,    2, 0x08 /* Private */,
-      27,    0,  198,    2, 0x08 /* Private */,
-      28,    1,  199,    2, 0x08 /* Private */,
-      30,    1,  202,    2, 0x08 /* Private */,
-      33,    0,  205,    2, 0x08 /* Private */,
-      34,    1,  206,    2, 0x08 /* Private */,
-      37,    0,  209,    2, 0x08 /* Private */,
+       1,    1,  154,    2, 0x08 /* Private */,
+       4,    1,  157,    2, 0x08 /* Private */,
+       5,    1,  160,    2, 0x08 /* Private */,
+       6,    1,  163,    2, 0x08 /* Private */,
+       7,    1,  166,    2, 0x08 /* Private */,
+       8,    1,  169,    2, 0x08 /* Private */,
+       9,    1,  172,    2, 0x08 /* Private */,
+      10,    1,  175,    2, 0x08 /* Private */,
+      11,    1,  178,    2, 0x08 /* Private */,
+      12,    1,  181,    2, 0x08 /* Private */,
+      13,    1,  184,    2, 0x08 /* Private */,
+      15,    1,  187,    2, 0x08 /* Private */,
+      16,    0,  190,    2, 0x08 /* Private */,
+      17,    0,  191,    2, 0x08 /* Private */,
+      18,    1,  192,    2, 0x08 /* Private */,
+      20,    1,  195,    2, 0x08 /* Private */,
+      22,    1,  198,    2, 0x08 /* Private */,
+      23,    1,  201,    2, 0x08 /* Private */,
+      25,    1,  204,    2, 0x08 /* Private */,
+      26,    1,  207,    2, 0x08 /* Private */,
+      28,    1,  210,    2, 0x08 /* Private */,
+      30,    0,  213,    2, 0x08 /* Private */,
+      31,    0,  214,    2, 0x08 /* Private */,
+      32,    1,  215,    2, 0x08 /* Private */,
+      34,    1,  218,    2, 0x08 /* Private */,
+      37,    0,  221,    2, 0x08 /* Private */,
+      38,    1,  222,    2, 0x08 /* Private */,
+      41,    0,  225,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Bool,    3,
@@ -150,12 +157,14 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void, QMetaType::Int,   21,
     QMetaType::Void, QMetaType::Int,   24,
     QMetaType::Void, QMetaType::Bool,    3,
+    QMetaType::Void, QMetaType::Int,   27,
+    QMetaType::Int, QMetaType::Float,   29,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QByteArray,   29,
-    QMetaType::Void, 0x80000000 | 31,   32,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::QByteArray,   33,
     QMetaType::Void, 0x80000000 | 35,   36,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 39,   40,
     QMetaType::Void,
 
        0        // eod
@@ -186,13 +195,16 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 16: _t->on_spinCenter_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 17: _t->on_comboDirectSamp_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 18: _t->on_toggleTransmit_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 19: _t->openSerialPort(); break;
-        case 20: _t->closeSerialPort(); break;
-        case 21: _t->writeData((*reinterpret_cast< const QByteArray(*)>(_a[1]))); break;
-        case 22: _t->writeChar((*reinterpret_cast< byte(*)>(_a[1]))); break;
-        case 23: _t->readData(); break;
-        case 24: _t->handleError((*reinterpret_cast< QSerialPort::SerialPortError(*)>(_a[1]))); break;
-        case 25: _t->handleTimer(); break;
+        case 19: _t->on_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 20: { int _r = _t->power2S((*reinterpret_cast< float(*)>(_a[1])));
+            if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
+        case 21: _t->openSerialPort(); break;
+        case 22: _t->closeSerialPort(); break;
+        case 23: _t->writeData((*reinterpret_cast< const QByteArray(*)>(_a[1]))); break;
+        case 24: _t->writeChar((*reinterpret_cast< byte(*)>(_a[1]))); break;
+        case 25: _t->readData(); break;
+        case 26: _t->handleError((*reinterpret_cast< QSerialPort::SerialPortError(*)>(_a[1]))); break;
+        case 27: _t->handleTimer(); break;
         default: ;
         }
     }
@@ -223,13 +235,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 26)
+        if (_id < 28)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 26;
+        _id -= 28;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 26)
+        if (_id < 28)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 26;
+        _id -= 28;
     }
     return _id;
 }

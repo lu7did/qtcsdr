@@ -47,15 +47,28 @@ void QMySpectrumWidget::reinit()
         *(((unsigned*)spectrumImage->bits())+i)=0;
 }
 
+int QMySpectrumWidget::getRectX() {
+    int halfWidth = this->width()/2;
+
+    return (int)(halfWidth+((float)(this->offsetFreq+this->filterLowCut)/this->sampleRate)*this->width());
+
+}
+
+int QMySpectrumWidget::getRectW() {
+    int halfWidth = this->width()/2;
+
+    return (int)(((float)(this->filterHighCut-this->filterLowCut)/this->sampleRate)*this->width());
+    
+}
 void QMySpectrumWidget::paintEvent(QPaintEvent* event)
 {
     QPainter p(this);
     p.drawImage(0,0,*spectrumImage);
 
     int halfWidth = this->width()/2;
-    int rectX = halfWidth+((float)(this->offsetFreq+this->filterLowCut)/this->sampleRate)*this->width();
-    int rectW = ((float)(this->filterHighCut-this->filterLowCut)/this->sampleRate)*this->width();
-    //qDebug() << "pe" << rectX << rectW;
+    int rectX = this->getRectX();
+    int rectW = this->getRectW();
+
     p.fillRect(rectX,0,rectW,this->height(),QColor::fromRgbF(1,1,1,0.3));
 }
 
@@ -77,7 +90,6 @@ void QMySpectrumWidget::shiftImageOneLineDown()
     {
         unsigned* ptrDst = (unsigned*)spectrumImage->scanLine(i);
         unsigned* ptrSrc = (unsigned*)spectrumImage->scanLine(i-1);
-        //qDebug() << "h" << spectrumImage->height() << "i" << i << ptrSrc << ptrDst;
         for(int j=0;j<spectrumImage->bytesPerLine()/sizeof(unsigned);j++) *(ptrDst++)=*(ptrSrc++);
 
     }
@@ -93,7 +105,6 @@ unsigned colorBetween(unsigned first, unsigned second, float percent)
         unsigned add = ( (unsigned)((first&(0xff<<(i*8)))*percent) + (unsigned)((second&(0xff<<(i*8)))*(1-percent)) ) & (0xff<<(i*8));
         output |= add;
     }
-    //qDebug() << QString::number(output,16);
     return output;
 }
 
@@ -120,12 +131,22 @@ unsigned chEndianness(unsigned i)
 
  bool QMySpectrumWidget::takeOneWaterfallLine(QByteArray* from)
  {
+     float avg=0.0;
+     int   n=0;
+     int rectX = this->getRectX();
+     int rectW = this->getRectW()+rectX;
+    
      float* fdata = (float*)from->data();
      if(from->length()<=FFTSize*sizeof(unsigned)) return false;
      shiftImageOneLineDown();
      for(int i=0;i<FFTSize;i++)
      {
          unsigned rawColor = waterfallMakeColor(fdata[i]);
+
+         if ((i>=rectX) && (i<=(rectW))) {
+            avg=avg+fdata[i];
+            n++;
+         }
          QRgb* rgba = ((QRgb*)oneLineOfSpectrum->bits())+i;
          QColor col = QColor::fromRgba(*rgba);
          col.setRed((rawColor&0xff000000)>>24);
@@ -134,6 +155,8 @@ unsigned chEndianness(unsigned i)
          col.setAlpha(rawColor&0xff);
          *rgba = col.rgba();
      }
+     (n>=0 ? this->signalPower=avg/n : this->signalPower=0.0);
+
      QImage scaledImage = oneLineOfSpectrum->scaled(this->width(),1,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
      for(int i=0;i<this->width();i++)
      {
