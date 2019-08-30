@@ -50,7 +50,7 @@ bool getWord (unsigned char SysWord, unsigned char v);
 #include <QSerialPort>
 #include <cmath>
 #include <wiringPi.h>
-
+#include <QMessageBox>
 #define RTLTCP_SET_FREQ 0x1
 #define RTLTCP_SET_DIRECT_SAMPLING 0x9
 #define SMETER_CALLIBRATION -20
@@ -99,7 +99,7 @@ private slots:
     void on_comboDirectSamp_currentIndexChanged(int index);
 
     void on_toggleTransmit_toggled(bool checked);
-    void on_valueChanged(int v);
+    void on_dial_valueChanged(int v);
 
     int  power2S(float s);
     void openSerialPort();
@@ -139,7 +139,7 @@ private:
     //QProcess procMtr;
     QProcess procKillTX;
     QString fifoPipePath;
-
+    QMessageBox critical;
     int fifoPipe;
     QTimer tmrRead;
     QTextStream qStdOut;
@@ -159,6 +159,7 @@ private:
     int TBRK=30;
 
     QSerialPort *m_serial = nullptr;
+    char* serialPortName=(char*)"/tmp/ttyv1";
 
     int  dialAnt=0;
     int  dialDelta=0;

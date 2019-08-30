@@ -1,10 +1,15 @@
 /*
-This software is part of qtcsdr.
-
-
+This software is a fork evolution of  qtcsdr.
 Copyright (c) 2015, Andras Retzler <randras@sdr.hu>
 All rights reserved.
 
+---------------------------------------------------------------------------
+qtcsdr extensions
+Copyright (c) 2019, Dr. Pedro E. Colla <LU7DID> lu7did@gmail.com
+All rights reserved
+
+Libraries incorporated from PixiePi package (http://www.github.com/lu7did/PixiePi).
+---------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
@@ -70,6 +75,9 @@ CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
 #include <fcntl.h>
 #include <signal.h>
 
+//*----------------------------------------------------------------------------------------------------------------------------------------------------
+//* Static (default) DSP processor command set
+//*----------------------------------------------------------------------------------------------------------------------------------------------------
 #define CMD_IQSERVER "pgroup -9 rtl_tcp -a 127.0.0.1 -s %SAMP_RATE% -p 4950 -f 89500000"
 #define CMD_DISTRIB "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4950; sleep .3; done) | nmux -p 4951 -a 127.0.0.1 -b %NMUX_BUFSIZE% -n %NMUX_BUFCNT%\""
 #define CMD_MOD_WFM "pgroup -9 bash -c \"(for anything in {0..10}; do ncat 127.0.0.1 4951; sleep .3; done) | csdr convert_u8_f | csdr shift_addition_cc --fifo %FIFO% | csdr fir_decimate_cc %WFM_DECIM% 0.05 HAMMING  | csdr fmdemod_quadri_cf | csdr fractional_decimator_ff 5 | csdr deemphasis_wfm_ff 48000 50e-6 | csdr convert_f_i16 |  %AUDIOPLAYER%\""
@@ -98,10 +106,10 @@ CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
 
 #define NMUX_MEMORY_MBYTE 50
 
-//#define CMD_WFM "pgroup -9 bash -c \"rtl_tcp -s 2400000 -p 4951 -f 89500000 & (sleep 1; nc localhost 4951 | csdr convert_u8_f | csdr shift_addition_cc -0.085 | csdr fir_decimate_cc 10 0.05 HAMMING | csdr fmdemod_quadri_cf | csdr fractional_decimator_ff 5 | csdr deemphasis_wfm_ff 48000 50e-6 | csdr convert_f_i16 | mplayer -cache 768 -quiet -rawaudio samplesize=2:channels=1:rate=48000 -demuxer rawaudio -)\""
-
-
-
+//*------------------------------------------------------------------------------------------------------------------------------------
+//* getNextArgAfter
+//* process arguments
+//*------------------------------------------------------------------------------------------------------------------------------------
 QString MainWindow::getNextArgAfter(QString what)
 {
     if(QCoreApplication::arguments().contains(what))
@@ -119,13 +127,20 @@ QString MainWindow::getNextArgAfter(QString what)
 }
 
 
-
+//*------------------------------------------------------------------------------------------------------------------------------------
+//* MainWindow GUI constructor
+//* GUI constructor and program initialization
+//*------------------------------------------------------------------------------------------------------------------------------------
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow), qStdOut(stdout),m_serial(new QSerialPort(this)) 
 {
+
+//*--- create GUI
+
     ui->setupUi(this);
 
+//*--- Initialize status of main controls
 
     ui->labelCAT->setHidden(false);
     ui->labelPWR->setHidden(false);
@@ -142,6 +157,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->labelMETER->setHidden(true);
     ui->progressBarMeter->setHidden(true);
 
+    ui->lcdNumberPanel->setStyleSheet("QLabel { background-color : #FFCF9E; }");
 
     ui->dial->setMinimum(0);
     ui->dial->setMaximum(100);
@@ -152,11 +168,6 @@ MainWindow::MainWindow(QWidget *parent) :
     dialChanged=false;
     TDIAL=3;
 
-    connect(ui->dial,SIGNAL(valueChanged(int)),this,SLOT(on_valueChanged(int)));
-
-    QTimer *t = new QTimer(this);
-    connect(t,SIGNAL(timeout()),this,SLOT(handleTimer()));
-    t->start(100);
 
     if(QCoreApplication::arguments().contains("--rpitx"))
     {
@@ -169,11 +180,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QString nextArg;
 
+//*--- initialize CAT hooks
+
     cat->sendChar=(CALLBACK)&MainWindow::CATCallBack;
     cat->changeFreq=(CALLBACK)&MainWindow::CATchangeFreq;
     cat->changeStatus=(CALLBACK)&MainWindow::CATchangeStatus;
     cat->changeMode=(CALLBACK)&MainWindow::CATchangeMode;
     cat->METER=0x00;
+
+//*--- Different sound devices
 
     if(QCoreApplication::arguments().contains("--mplayer"))
     {
@@ -196,10 +211,13 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << audioPlayerCommand;
 
 
-    //connect(m_serial, &QSerialPort::errorOccurred, this, &MainWindow::handleError);
-    connect(m_serial, &QSerialPort::readyRead, this, &MainWindow::readData);
-    qDebug() << "Connected m_serial with readyRead function";
+//*--- create general purpose 100 mSec timer for system management
 
+    QTimer *t = new QTimer(this);
+
+
+
+//*--- Create group of buttons
 
     modsButtons.append(ui->toggleAM);
     modsButtons.append(ui->toggleNFM);
@@ -211,188 +229,102 @@ MainWindow::MainWindow(QWidget *parent) :
     modsButtons.append(ui->toggleDSP);
     modsButtons.append(ui->togglePKT);
 
-
+//*--- Connect SIGNALS with SLOTS of the GUI objects
 
     connect(&tmrRead, SIGNAL(timeout()), this, SLOT(tmrRead_timeout()));
     connect(ui->widgetFFT, SIGNAL(shiftChanged(int)), this, SLOT(on_shiftChanged(int)));
+    connect(t,SIGNAL(timeout()),this,SLOT(handleTimer()));
+    connect(ui->dial,SIGNAL(valueChanged(int)),this,SLOT(on_dial_valueChanged(int)));
+    connect(m_serial, &QSerialPort::readyRead, this, &MainWindow::readData);
+
+//*--- Activate timers
+
+    t->start(100);
     tmrRead.start(10);
-    //connect(m_ui->actionConnect, &QAction::triggered, this, &MainWindow::openSerialPort);
-    ui->lcdNumberPanel->setStyleSheet("QLabel { background-color : #FFCF9E; }");
 
 }
 
-void MainWindow::on_valueChanged(int v) {
-
-    if (v==0 && this->dialAnt==100) {
-       this->dialDelta++;
-       this->dialAnt=v;
-       this->dialChanged=true;
-       qDebug() << "dialDelta ClockWise" << v << this->dialAnt << this->dialDelta;
-
-       TDIAL=3;
-       return;
+//*---------------------------------------------------------------------------------------------------------------
+//* GUI Destructor
+//* Called upon program termination
+//*---------------------------------------------------------------------------------------------------------------
+MainWindow::~MainWindow()
+{
+    if(ui->toggleRun->isChecked()){
+       on_toggleRun_toggled(false); //so that we kill all subprocesses
     }
-
-    if (this->dialAnt==0 && v==100) {
-       this->dialDelta--;
-
-       this->dialAnt=v;
-       this->dialChanged=true;
-       qDebug() << "dialDelta Counter ClockWise" << v << this->dialAnt << this->dialDelta;
-
-       TDIAL=3;
-       return;
-    }
-
-    if (v>this->dialAnt) {
-      this->dialDelta=this->dialDelta+(v-this->dialAnt);
-      this->dialAnt=v;
-      this->dialChanged=true;
-      qDebug() << "dialDelta ClockWise" << v << this->dialAnt << this->dialDelta;
-
-      TDIAL=3;
-      return;
-    }
-    if (v<this->dialAnt) {
-      this->dialDelta=this->dialDelta+(v-this->dialAnt);
-      qDebug() << "dialDelta Counter ClockWise" << v << this->dialAnt << this->dialDelta;
-      this->dialAnt=v;
-      this->dialChanged=true;
-      TDIAL=3;
-      return;
-    }
-
+    delete ui;
 }
+
+
+//*------------------------------------------------[CAT Management]-------------------------------------------------
+//* This is the implementation of the methods contained in the CAT817.h library, the program emulates a Yaesu FT-817
+//* commands are assumed to come from a serial port or a pipe emulating one (if on a same machine loopback)
+//*-----------------------------------------------------------------------------------------------------------------
 void MainWindow::openSerialPort()
 {
-    //const SettingsDialog::Settings p = m_settings->settings();
-    qDebug() << "openSerialPort()";
-
-
-    m_serial->setPortName("/tmp/ttyv1");
+    qDebug() << "openSerialPort(): port " << serialPortName;
+    m_serial->setPortName(serialPortName);
     m_serial->setBaudRate(QSerialPort::Baud4800);
     m_serial->setDataBits(QSerialPort::Data8);
     m_serial->setParity(QSerialPort::NoParity);
     m_serial->setStopBits(QSerialPort::TwoStop);
     m_serial->setFlowControl(QSerialPort::NoFlowControl);
     if (m_serial->open(QIODevice::ReadWrite)) {
-       qDebug() << "Open success";
-        //m_console->setEnabled(true);
-        //m_console->setLocalEchoEnabled(p.localEchoEnabled);
-        //m_ui->actionConnect->setEnabled(false);
-        //m_ui->actionDisconnect->setEnabled(true);
-        //m_ui->actionConfigure->setEnabled(false);
-        //showStatusMessage(tr("Connected to %1 : %2, %3, %4, %5, %6")
-        //                  .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
-        //                  .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
+       qDebug() << "openSerialPort(): Open success";
     } else {
-        qDebug() << "Open Error";
-        //QMessageBox::critical(this, tr("Error"), m_serial->errorString());
-        //showStatusMessage(tr("Open error"));
+       qDebug() << "openSerialPort(): Open Error";
     }
 }
+
+//*---- Close serial port
 void MainWindow::closeSerialPort()
 {
     qDebug() << "closeSerialPort()";
 
     if (m_serial->isOpen())
         m_serial->close();
-    //m_console->setEnabled(false);
-    //m_ui->actionConnect->setEnabled(true);
-    //m_ui->actionDisconnect->setEnabled(false);
-    //m_ui->actionConfigure->setEnabled(true);
-    //showStatusMessage(tr("Disconnected"));
 }
 
+//*---- Follows the hooks used by the CAT library, these hooks are used to signal the library an external program is using it
+//*---- However the entries are not used as a callback to avoid flow and object architecture model conflicts
+ 
 void MainWindow::CATchangeFreq () {
-    //qDebug() << "changeFreq() event";
-
 }
 void MainWindow::CATchangeStatus() {
-    //qDebug() <<  "changeStatus()";
-
 }
 void MainWindow::CATchangeMode() {
-
     qDebug() << "changeMode()" << cat->MODE ;
     fchangeMode=true;
-
-
-
 }
 void MainWindow::CATgetRX() {
-    //qDebug() << "getR()";
-
 }
 void MainWindow::CATgetTX() {
-    //qDebug() << "getTX()";
-
+}
+//*--- Callback entry (not used)
+void MainWindow::CATCallBack() {
 }
 
 
-void MainWindow::handleTimer() {
-
-   if (TCAT!=0) {
-      TCAT--;
-      if(TCAT==0) {
-        if(ui->toggleRun->isChecked()) {
-          ui->labelCAT->setStyleSheet("QLabel { background-color : #0000FF; }");
-        } else {
-          ui->labelCAT->setStyleSheet("QLabel { background-color : blue; }");
-        }
-
-      }
-   }
-   if (TBRK!=0) {
-      TBRK--;
-      if(TBRK==0) {
-
-      }
-   }
-
-
-   if (TSEC!=0) {
-      TSEC--;
-      if (TSEC==0) {
-         TSEC=10;
-      }
-   }
-
-   if (TDIAL!=0) {
-      TDIAL--;
-      if (TDIAL==0) {
-         if (this->dialChanged == true) {
-            ui->spinFreq->setValue(ui->spinFreq->value()+(this->dialDelta*this->dialStep));
-            //qDebug() << "Dial changed offset" << dialDelta << ui->spinFreq->value();;
-
-         }
-         this->dialChanged=false;
-         this->dialDelta=0;
-      }
-   }
-}
-
+//*---- method to write a single character (not used)
 void MainWindow::writeChar(byte d) 
 
 {
 
 }
+//*--- write data back to the controller program after processing the CAT command
 void MainWindow::writeData(const QByteArray &data)
 {
-    //qDebug() << "writeData()" << data << data.size();;
     m_serial->write(data,1);
-
 }
 
-void MainWindow::CATCallBack() {
-
-
-}
+//*--- Read a CAT request, format frames and process them, a response is given according to the command
+//*--- process changes in operational parameters as requested by the command
 
 void MainWindow::readData()
 {
     char buffer[18];
-    byte BCDbuf[12];
+    byte BCDbuf[16];
     int maxFrame=4;
 
     BCDbuf[0]=0x00;
@@ -404,26 +336,43 @@ void MainWindow::readData()
     BCDbuf[6]=0x00;
     BCDbuf[7]=0x00;
 
+//*--- read all pending chanracters
+
     const QByteArray data = m_serial->readAll();
-    //qDebug() << "readData(): " << data.size() << " " << data;
+
+//*--- process into a buffer
 
     for (int m = 0; m < data.size(); m++) {
         cat->rxBuffer[cat->n]=data.at(m);
         cat->n++;
     }
 
-    if (cat->n==5) {
-       char buffer[18];
+//*--- five characters arrived? Hay que mejorar el procesamiento asumiento que haya mas de 5 caracteres
+
+    while (cat->n>=5) {
+
        cat->hex2str(&buffer[0],&cat->rxBuffer[0],cat->n);
-       //fprintf (stderr,"readData(): Received Serial hex2str (%s)\n",buffer);
        cat->processCAT(&cat->rxBuffer[0]);
-       cat->n=0;
+
+       if (cat->n > 5) {
+          int p=5;
+          for (int k=cat->n-5;k>0;k--) {
+              cat->rxBuffer[p-5]=cat->rxBuffer[p];
+              p++;
+          }
+       }
+       cat->n=cat->n-5;
+
+//*--- Has a frequency change been detected?
+
        if (cat->fchangeFreq==true) {
           qDebug() << "readData(): changeFreq " << cat->SetFrequency;
           cat->fchangeFreq=false;
           ui->spinFreq->setValue(cat->SetFrequency);
-          //on_spinFreq_valueChanged(ui->spinFreq->value());
        }
+
+//*--- Has a  mode change been detected?
+
        if (cat->fchangeMode==true) {
           cat->fchangeMode=false;
 
@@ -441,14 +390,19 @@ void MainWindow::readData()
           }
        }
 
+
+//*--- signal at the GUI a CAT interaction has been made, make the indicator last for 200 mSecs
+
        ui->labelCAT->setStyleSheet("QLabel { background-color : cyan; }");
        TCAT=20;
+
+//*--- Write the CAT response back to the contoller program
        if (cat->bufLen!=0) {
           cat->hex2str(&buffer[0],&cat->bufChar[0],cat->bufLen);
-          //fprintf (stderr,"readData(): Response produced hex2str (%s)\n",buffer);
           m_serial->write((char*)&cat->bufChar[0],cat->bufLen);
           cat->bufLen=0;
        }
+
        maxFrame--;
        if (maxFrame==0) { 
           return;  //If processed one command don't get stuck here
@@ -456,16 +410,152 @@ void MainWindow::readData()
 
     }
 }
-
+//*----- handle serial port errors
 void MainWindow::handleError(QSerialPort::SerialPortError error)
 {
     if (error == QSerialPort::ResourceError) {
-        //QMessageBox::critical(this, tr("Critical Error"), m_serial->errorString());
+        QMessageBox::critical(this, tr("Critical Error"), m_serial->errorString());
         closeSerialPort();
     }
 }
+//*---------------------------------------------------------------------------------------------------------------------
+//*                                    Operational Management thru GUI actions
+//*---------------------------------------------------------------------------------------------------------------------
+//*---------------------------------------------------------------------------------------------------------------------
+//* on_toggleRun_toggled
+//* Manage the Power button, turns the transceiver on or off
+//* When turned on starts all relevant background processes and setup the GUI to enable the usage
+//* enable the waterfall, turns the RTL-SDR flow of samples  and start listeining to CAT commands
+//*---------------------------------------------------------------------------------------------------------------------
+void MainWindow::on_toggleRun_toggled(bool checked)
+{
+    if(checked)
+    {
 
+//*--- start the waterfall
 
+        ui->widgetFFT->sampleRate=ui->comboSampRate->currentText().toInt();
+        ui->comboSampRate->setEnabled(false);
+
+//*--- start the FIFO to communicate with CSDR the current shift
+
+        fifoPipePath = QString("/tmp/qtcsdr_shift_pipe_")+QString::number(rand());
+        mkfifo(fifoPipePath.toStdString().c_str(), 0600);
+        fifoPipe=open(fifoPipePath.toStdString().c_str(), O_RDWR);
+        setShift();
+
+//*--- Start DSP processors
+
+        QString IQCommand = QString(CMD_IQSERVER).replace("%SAMP_RATE%",ui->comboSampRate->currentText());
+        qDebug() << "IQCommand =" << IQCommand;
+        procIQServer.start(IQCommand);
+        procIQServer.waitForStarted(1000);
+        int nmuxBufsize = 0, nmuxBufcnt = 0, sampRate = ui->comboSampRate->currentText().toInt();
+        while (nmuxBufsize < sampRate/4) nmuxBufsize += 4096; //taken from OpenWebRX
+        while (nmuxBufsize * nmuxBufcnt < NMUX_MEMORY_MBYTE * 1e6) nmuxBufcnt += 1;
+        QString distribCommand = QString(CMD_DISTRIB)
+                .replace("%NMUX_BUFSIZE%", QString::number(nmuxBufsize))
+                .replace("%NMUX_BUFCNT%", QString::number(nmuxBufcnt));
+        qDebug() << "distribCommand =" << distribCommand;
+        procDistrib.start(distribCommand);
+        procDistrib.waitForStarted(1000);
+        procDemod.start(getDemodulatorCommand());
+        QString FFTCommand = QString(CMD_FFT).replace("%FFT_READ_SIZE%", QString::number(ui->comboSampRate->currentText().toInt()/10));
+        qDebug() << "FFTCommand" << FFTCommand;
+        procFFT.start(FFTCommand);
+
+//*--- Start listening for CAT commands on serial port or internal pipe and init CAT system
+
+        this->openSerialPort();
+        cat->SetFrequency=ui->spinFreq->value();
+
+//*--- Set the operation frequency and set the dial accordingly
+
+        on_spinFreq_valueChanged(ui->spinFreq->value());
+        on_lcdNumberPanel_valueChanged(ui->spinFreq->value());
+        on_comboDirectSamp_currentIndexChanged(0);
+
+//*--- set the bandwidth of the filter based on the mode
+
+        updateFilterBw();
+
+//*--- GUI activation
+
+        ui->labelCAT->setHidden(false);
+        ui->labelPWR->setHidden(false);
+        ui->labelPTT->setHidden(false);
+        ui->labelVFO->setHidden(false);
+        ui->labelMODE->setHidden(false);
+        ui->labelMETER->setHidden(false);
+        ui->progressBarMeter->setHidden(false);
+
+        ui->labelCAT->setStyleSheet("QLabel { background-color : #0000FF; }");
+        ui->labelPWR->setStyleSheet("QLabel { background-color : #32CD32; }");
+        ui->labelPTT->setStyleSheet("QLabel { background-color : #800000; }");
+
+        ui->dial->setEnabled(true);
+
+    }
+    else
+    {
+
+        ui->comboSampRate->setEnabled(true);
+
+//*--- stop pipe
+
+        unlink(fifoPipePath.toStdString().c_str());
+
+//*--- kill all background processes
+
+        if(procDemod.pid()!=0)    kill(procDemod.pid(), SIGTERM);
+        if(procDistrib.pid()!=0)  kill(procDistrib.pid(), SIGTERM);
+        if(procIQServer.pid()!=0) kill(procIQServer.pid(), SIGTERM);
+        if(procFFT.pid()!=0)      kill(procFFT.pid(), SIGTERM);
+
+//*--- close CAT commands
+
+        this-> closeSerialPort();
+
+//*--- clean up buffers
+
+        procFFT.readAll();
+        FFTDataBuffer.clear();
+        ui->dial->setEnabled(false);
+
+//*--- set GUI into idle mode (should be the same than at the start)
+
+        ui->labelVFO->setHidden(true);
+        ui->labelMODE->setHidden(true);
+        ui->labelMETER->setHidden(true);
+        ui->progressBarMeter->setHidden(true);
+
+        ui->labelCAT->setStyleSheet("QLabel { background-color : blue; }");
+        ui->labelPWR->setStyleSheet("QLabel { background-color : green; }");
+        ui->labelPTT->setStyleSheet("QLabel { background-color : #800000; }");
+
+    }
+}
+//*---------------------------------------------------------------------------------------------------------------------
+//* on_togglexxx_toggled
+//* Event handlers for all the mode related buttons
+//*----- Manage changes in mode, basically turn the current processor off and start the new one
+//*---------------------------------------------------------------------------------------------------------------------
+
+void MainWindow::on_toggleWFM_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleWFM); }
+void MainWindow::on_toggleNFM_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleNFM); }
+void MainWindow::on_toggleAM_toggled(bool checked)  { untoggleOtherModButtonsThan(ui->toggleAM); }
+void MainWindow::on_toggleUSB_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleUSB); }
+void MainWindow::on_toggleLSB_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleLSB); }
+void MainWindow::on_toggleCW_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleCW); }
+void MainWindow::on_toggleCWR_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleCWR); }
+void MainWindow::on_toggleDSP_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleDSP); }
+void MainWindow::on_togglePKT_toggled(bool checked) { untoggleOtherModButtonsThan(ui->togglePKT); }
+
+//*---------------------------------------------------------------------------------------------------------------------
+//* untoggleOtherModButtonsThan
+//*---- invoked when a mode change is requested in order to untoggle all modes except the modified one
+//*---- Once performed the new modulator DSP processor is selected and executed
+//*---------------------------------------------------------------------------------------------------------------------
 void MainWindow::untoggleOtherModButtonsThan(QPushButton* pb)
 {
     static bool protect;
@@ -499,37 +589,198 @@ void MainWindow::untoggleOtherModButtonsThan(QPushButton* pb)
     if (ui->togglePKT->isChecked()) {cat->MODE=MPKT;ui->labelMODE->setText("PKT");dialStep=STEP100HZ;}
 
 }
-
-void MainWindow::redirectProcessOutput(QProcess &proc, bool onlyStdErr)
+//*------------------------------------------------------------------------------------------------------
+//* on_shiftChanged
+//* the offset between the RTL-SDR dongle and the current frequency has changed, adjust accordingly
+//*------------------------------------------------------------------------------------------------------
+void MainWindow::on_shiftChanged(int newOffset)
 {
-    if(proc.pid()!=0)
-    {
-        QString temp = ((onlyStdErr)?"":proc.readAllStandardOutput()) + proc.readAllStandardError();
-        if(temp.length()) qStdOut << temp;
-    }
-    qStdOut.flush();
+    ui->spinOffset->setValue(newOffset);
 }
 
-int  MainWindow::power2S(float s) {
+//*------------------------------------------------------------------------------------------------------
+//* on_toggleTransmit_toggled
+//* event to handle the request to turn the transmitter on, can be triggered thru the GUI or thru
+//* other external events such as CAT or Keyer.
+//*------------------------------------------------------------------------------------------------------
+void MainWindow::on_toggleTransmit_toggled(bool checked)
+{
+    if(checked)
+    {
+        QString modCmd = getModulatorCommand();
+        procTX.start(modCmd);
+        procTX.waitForStarted(1000);
+    }
+    else
+    {
+        if(procTX.pid()!=0)
+        {
+            procKillTX.start("bash -c \"gksu touch; sudo killall rpitx\"");
+            kill(procTX.pid(), SIGTERM);
+        }
+    }
+}
+//*---------------------------------------------------------------------------------------------------
+//* on_lcdNumberPanel_valueChanged
+//* set the value of the lcd panel
+//*--------------------------------------------------------------------------------------------------
+void MainWindow::on_lcdNumberPanel_valueChanged(int val)
+{
+    ui->lcdNumberPanel->setSmallDecimalPoint(true);
+    ui->lcdNumberPanel->display(float(val/1000));  //* Intervention to update LCD
 
-     if (s<=-126) return 0;
-     if (s<=-121) return 1;
-     if (s<=-115) return 2;
-     if (s<=-109) return 3;
-     if (s<=-103) return 4;
-     if (s<=-97) return 5;
-     if (s<=-91) return 6;
-     if (s<=-85) return 7;
-     if (s<=-79) return 8;
-     if (s<=-73) return 9;
-     if (s<=-63) return 10;
-     if (s<=-53) return 11;
-     if (s<=-43) return 12;
-     if (s<=-33) return 13;
-     if (s<=-23) return 14;
+}
+//*---------------------------------------------------------------------------------------------------
+//* on_spinFreq_valueChanged
+//* manage request for frequency changes coming from the dial, CAT, GUI Waterfall or spin
+//*---------------------------------------------------------------------------------------------------
+void MainWindow::on_spinFreq_valueChanged(int val)
+{
+    qDebug() << "on_spinFreq_valueChanged() " << val;
+    ui->spinCenter->setValue(ui->spinFreq->value()-ui->spinOffset->value());
 
-     return 15;
-}    
+    sendCommand(RTLTCP_SET_FREQ, ui->spinCenter->value());
+    if (cat->SetFrequency != ui->spinFreq->value()) {
+        cat->SetFrequency=ui->spinFreq->value();
+    }
+}
+//*---------------------------------------------------------------------------------------------------
+//* on_spinOffset_valueChanged
+//* manage requests to change the offset
+//*---------------------------------------------------------------------------------------------------
+void MainWindow::on_spinOffset_valueChanged(int arg1)
+{
+    setShift();
+    ui->spinFreq->setValue(ui->spinCenter->value()+ui->spinOffset->value());
+    ui->lcdNumberPanel->display(float(ui->spinCenter->value()+ui->spinOffset->value())/1000);
+
+    
+}
+//*----------------------------------------------------------------------------------------------------
+//* on_spinCenter_valueChanged
+//* manage requests to change the Local Oscillator (LO) frequency
+//*----------------------------------------------------------------------------------------------------
+void MainWindow::on_spinCenter_valueChanged(int arg1)
+{
+    sendCommand(RTLTCP_SET_FREQ, ui->spinCenter->value());
+    ui->spinFreq->setValue(ui->spinCenter->value()+ui->spinOffset->value());
+    ui->lcdNumberPanel->display(float(ui->spinCenter->value()+ui->spinOffset->value())/1000);
+}
+//*----------------------------------------------------------------------------------------------------
+//* on_comboDirectSamp
+//* Change the sampling mode 0=Direct,1=I,2=Q
+//*----------------------------------------------------------------------------------------------------
+void MainWindow::on_comboDirectSamp_currentIndexChanged(int index)
+
+{
+    sendCommand(RTLTCP_SET_DIRECT_SAMPLING,ui->comboDirectSamp->currentIndex());
+}
+//*-------------------------------------------------------------------------------------------
+//*--- on_dial_valueChanged (dial control)
+//*--- This is the event handler for the Dial control, called whenever the dial knob is moved
+//*--- The actual frequency isn't changed until 3 system timer ticks (aka 300 mSecs) has elapsed
+//*--- this is done to prevent to overwhelm the processor with DSP processor updates when
+//*--- changing fast between frequencies
+//*-------------------------------------------------------------------------------------------
+void MainWindow::on_dial_valueChanged(int v) {
+
+    if (v==0 && this->dialAnt==100) {
+       this->dialDelta++;
+       this->dialAnt=v;
+       this->dialChanged=true;
+       TDIAL=3;
+       return;
+    }
+
+    if (this->dialAnt==0 && v==100) {
+       this->dialDelta--;
+
+       this->dialAnt=v;
+       this->dialChanged=true;
+       TDIAL=3;
+       return;
+    }
+
+    if (v>this->dialAnt) {
+      this->dialDelta=this->dialDelta+(v-this->dialAnt);
+      this->dialAnt=v;
+      this->dialChanged=true;
+      TDIAL=3;
+      return;
+    }
+    if (v<this->dialAnt) {
+      this->dialDelta=this->dialDelta+(v-this->dialAnt);
+      this->dialAnt=v;
+      this->dialChanged=true;
+      TDIAL=3;
+      return;
+    }
+
+}
+//*--------------------------------------------------------------------------------------------------------------------------------------
+//*                                 System management timers
+//* There are two timers, one DSP related serves buffer updates and waterfall refreshing (tmr_read_timeout()) while the other is 
+//  (handleTimer) is related to usability and GUI management
+//*--------------------------------------------------------------------------------------------------------------------------------------
+
+//*-------------------------------------------------------------------------------------------------------------------------------------
+//* handleTimer
+//* This timer is invoked to maintain a set of GUI and operations related timers, each one independently upon expiration generates
+//* actions.
+//*-------------------------------------------------------------------------------------------------------------------------------------
+void MainWindow::handleTimer() {
+
+//*--- This timer is used to unblink the CAT virtual LED after some period of inactivity
+
+   if (TCAT!=0) {
+      TCAT--;
+      if(TCAT==0) {
+        if(ui->toggleRun->isChecked()) {
+          ui->labelCAT->setStyleSheet("QLabel { background-color : #0000FF; }");
+        } else {
+          ui->labelCAT->setStyleSheet("QLabel { background-color : blue; }");
+        }
+
+      }
+   }
+
+//*--- This timer is meant to be used to manage the break-in feature
+
+   if (TBRK!=0) {
+      TBRK--;
+      if(TBRK==0) {
+
+      }
+   }
+
+//*--- This is a general purpose second elapsed timer
+
+   if (TSEC!=0) {
+      TSEC--;
+      if (TSEC==0) {
+         TSEC=10;
+      }
+   }
+
+//*--- This timer is used to apply changes of the dial once no further movements are made
+   if (TDIAL!=0) {
+      TDIAL--;
+      if (TDIAL==0) {
+         if (this->dialChanged == true) {
+            ui->spinFreq->setValue(ui->spinFreq->value()+(this->dialDelta*this->dialStep));
+            //qDebug() << "Dial changed offset" << dialDelta << ui->spinFreq->value();;
+
+         }
+         this->dialChanged=false;
+         this->dialDelta=0;
+      }
+   }
+}
+
+//*----------------------------------------------------------------------------------------------------------------
+//* tmrRead_timeout
+//* this timer is used for queue cleanup, waterfall management and other DSP related features
+//*----------------------------------------------------------------------------------------------------------------
 void MainWindow::tmrRead_timeout()
 {
     redirectProcessOutput(procDemod);
@@ -552,42 +803,59 @@ void MainWindow::tmrRead_timeout()
                     "stop: 0.8 orange, "
                     "stop: 1 red"
                     ")}");
-        //if (SUnit<=9) {
-        //   ui->progressBarMeter->setStyleSheet("QProgressBar::chunk { color : green }");
-        //} else {
-        //   if (SUnit>9 && SUnit<=12) {
-        //      ui->progressBarMeter->setStyleSheet("QProgressBar::chunk { color : yellow }");
-        //   } else {
-        //      ui->progressBarMeter->setStyleSheet("QProgressBar::chunk { color : red }");
-        //   }
-        //}
         ui->progressBarMeter->setValue(SUnit);
     }
 
 
 }
 
-MainWindow::~MainWindow()
+//*--------------------------------------------------------------------------------------------------------------------------------------
+//*                                 DSP Processing, Queue Management and Device Control
+//*--------------------------------------------------------------------------------------------------------------------------------------
+
+
+//*--------------------------------------------------------------------------------------------------------------------------------------
+//* redirectProcessOutput
+//* meant to be a general cleanup of standard input and error of all the background processes
+//*--------------------------------------------------------------------------------------------------------------------------------------
+void MainWindow::redirectProcessOutput(QProcess &proc, bool onlyStdErr)
 {
-    if(ui->toggleRun->isChecked()) on_toggleRun_toggled(false); //so that we kill all subprocesses
-    delete ui;
+    if(proc.pid()!=0)
+    {
+        QString temp = ((onlyStdErr)?"":proc.readAllStandardOutput()) + proc.readAllStandardError();
+        if(temp.length()) qStdOut << temp;
+    }
+    qStdOut.flush();
 }
 
-void MainWindow::on_toggleWFM_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleWFM); }
-void MainWindow::on_toggleNFM_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleNFM); }
-void MainWindow::on_toggleAM_toggled(bool checked)  { untoggleOtherModButtonsThan(ui->toggleAM); }
-void MainWindow::on_toggleUSB_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleUSB); }
-void MainWindow::on_toggleLSB_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleLSB); }
-void MainWindow::on_toggleCW_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleCW); }
-void MainWindow::on_toggleCWR_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleCWR); }
-void MainWindow::on_toggleDSP_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleDSP); }
-void MainWindow::on_togglePKT_toggled(bool checked) { untoggleOtherModButtonsThan(ui->togglePKT); }
+//*------------------------------------------------------------------------------------------------------
+//* power2S
+//* Transform power readings in dBm to S-Units 
+//*------------------------------------------------------------------------------------------------------
+int  MainWindow::power2S(float s) {
 
-void MainWindow::on_shiftChanged(int newOffset)
-{
-    ui->spinOffset->setValue(newOffset);
-}
+     if (s<=-126) return 0;
+     if (s<=-121) return 1;
+     if (s<=-115) return 2;
+     if (s<=-109) return 3;
+     if (s<=-103) return 4;
+     if (s<=-97) return 5;
+     if (s<=-91) return 6;
+     if (s<=-85) return 7;
+     if (s<=-79) return 8;
+     if (s<=-73) return 9;
+     if (s<=-63) return 10;
+     if (s<=-53) return 11;
+     if (s<=-43) return 12;
+     if (s<=-33) return 13;
+     if (s<=-23) return 14;
 
+     return 15;
+}    
+//*--------------------------------------------------------------------------------------------------------------------------------
+//* getDemodulatorCommand
+//* get the demodulator command processor based on the current mode, performs macro expansion
+//*--------------------------------------------------------------------------------------------------------------------------------
 QString MainWindow::getDemodulatorCommand()
 {
     QString myDemodCmd;
@@ -611,7 +879,10 @@ QString MainWindow::getDemodulatorCommand()
     qDebug() << "myDemodCmd ="<<myDemodCmd;
     return myDemodCmd;
 }
-
+//*---------------------------------------------------------------------------------------------------------------
+//* getModulatorCommand
+//* get the modulator processor command with macro expansion
+//*---------------------------------------------------------------------------------------------------------------
 QString MainWindow::getModulatorCommand()
 {
     QString myModCmd;
@@ -634,8 +905,10 @@ QString MainWindow::getModulatorCommand()
     qDebug() << "myModCmd ="<<myModCmd;
     return myModCmd;
 }
-
-
+//*------------------------------------------------------------------------------------------------------------
+//* updateFilterBw
+//* update filter bandwidth based on the mode upon start or mode change, this is a static setting
+//*-------------------------------------------------------------------------------------------------------------
 void MainWindow::updateFilterBw()
 {
     ui->widgetFFT->offsetFreq = ui->spinOffset->value();
@@ -650,110 +923,10 @@ void MainWindow::updateFilterBw()
     if(ui->togglePKT->isChecked()) { ui->widgetFFT->filterLowCut=0; ui->widgetFFT->filterHighCut=4000; }
 }
 
-void MainWindow::on_toggleRun_toggled(bool checked)
-{
-    if(checked)
-    {
-
-        ui->widgetFFT->sampleRate=ui->comboSampRate->currentText().toInt();
-        ui->comboSampRate->setEnabled(false);
-        fifoPipePath = QString("/tmp/qtcsdr_shift_pipe_")+QString::number(rand());
-        mkfifo(fifoPipePath.toStdString().c_str(), 0600);
-        fifoPipe=open(fifoPipePath.toStdString().c_str(), O_RDWR);
-        setShift();
-        QString IQCommand = QString(CMD_IQSERVER).replace("%SAMP_RATE%",ui->comboSampRate->currentText());
-        qDebug() << "IQCommand =" << IQCommand;
-        procIQServer.start(IQCommand);
-        procIQServer.waitForStarted(1000);
-        int nmuxBufsize = 0, nmuxBufcnt = 0, sampRate = ui->comboSampRate->currentText().toInt();
-        while (nmuxBufsize < sampRate/4) nmuxBufsize += 4096; //taken from OpenWebRX
-        while (nmuxBufsize * nmuxBufcnt < NMUX_MEMORY_MBYTE * 1e6) nmuxBufcnt += 1;
-        QString distribCommand = QString(CMD_DISTRIB)
-                .replace("%NMUX_BUFSIZE%", QString::number(nmuxBufsize))
-                .replace("%NMUX_BUFCNT%", QString::number(nmuxBufcnt));
-        qDebug() << "distribCommand =" << distribCommand;
-        procDistrib.start(distribCommand);
-        procDistrib.waitForStarted(1000);
-        procDemod.start(getDemodulatorCommand());
-        QString FFTCommand = QString(CMD_FFT).replace("%FFT_READ_SIZE%", QString::number(ui->comboSampRate->currentText().toInt()/10));
-        qDebug() << "FFTCommand" << FFTCommand;
-        procFFT.start(FFTCommand);
-
-//*--- Start listening for CAT commands on serial port or internal pipe and init CAT system
-
-        this->openSerialPort();
-        cat->SetFrequency=ui->spinFreq->value();
-
-
-        on_spinFreq_valueChanged(ui->spinFreq->value());
-        on_lcdNumberPanel_valueChanged(ui->spinFreq->value());
-        on_comboDirectSamp_currentIndexChanged(0);
-
-        updateFilterBw();
-
-//*--- GUI activation
-
-        ui->labelCAT->setHidden(false);
-        ui->labelPWR->setHidden(false);
-        ui->labelPTT->setHidden(false);
-        ui->labelVFO->setHidden(false);
-        ui->labelMODE->setHidden(false);
-        ui->labelMETER->setHidden(false);
-        ui->progressBarMeter->setHidden(false);
-
-        ui->labelCAT->setStyleSheet("QLabel { background-color : #0000FF; }");
-        ui->labelPWR->setStyleSheet("QLabel { background-color : #32CD32; }");
-        ui->labelPTT->setStyleSheet("QLabel { background-color : #800000; }");
-        ui->dial->setEnabled(true);
-
-    }
-    else
-    {
-        ui->comboSampRate->setEnabled(true);
-        unlink(fifoPipePath.toStdString().c_str());
-        if(procDemod.pid()!=0)    kill(procDemod.pid(), SIGTERM);
-        if(procDistrib.pid()!=0)  kill(procDistrib.pid(), SIGTERM);
-        if(procIQServer.pid()!=0) kill(procIQServer.pid(), SIGTERM);
-        if(procFFT.pid()!=0)      kill(procFFT.pid(), SIGTERM);
-        this-> closeSerialPort();
-        procFFT.readAll();
-        FFTDataBuffer.clear();
-        ui->dial->setEnabled(false);
-
-        //ui->labelCAT->setHidden(true);
-        //ui->labelPWR->setHidden(true);
-        //ui->labelPTT->setHidden(true);
-
-        ui->labelVFO->setHidden(true);
-        ui->labelMODE->setHidden(true);
-        ui->labelMETER->setHidden(true);
-        ui->progressBarMeter->setHidden(true);
-
-        ui->labelCAT->setStyleSheet("QLabel { background-color : blue; }");
-        ui->labelPWR->setStyleSheet("QLabel { background-color : green; }");
-        ui->labelPTT->setStyleSheet("QLabel { background-color : #800000; }");
-
-    }
-}
-
-void MainWindow::on_toggleTransmit_toggled(bool checked)
-{
-    if(checked)
-    {
-        QString modCmd = getModulatorCommand();
-        procTX.start(modCmd);
-        procTX.waitForStarted(1000);
-    }
-    else
-    {
-        if(procTX.pid()!=0)
-        {
-            procKillTX.start("bash -c \"gksu touch; sudo killall rpitx\"");
-            kill(procTX.pid(), SIGTERM);
-        }
-    }
-}
-
+//*----------------------------------------------------------------------------------------------------------------------
+//* setShift
+//* computes shift between local oscillator and operating mode frequency
+//*----------------------------------------------------------------------------------------------------------------------
 void MainWindow::setShift()
 {
     QString shiftString = QString::number(-ui->spinOffset->value()/(float)ui->comboSampRate->currentText().toInt())+"\n";
@@ -761,9 +934,13 @@ void MainWindow::setShift()
     ui->widgetFFT->offsetFreq = ui->spinOffset->value();
 }
 
+//*-----------------------------------------------------------------------------------------------------------------
+//* sendCommand
+//* Manage RTL-SDR commands during operation
+//* docs: https://github.com/pinkavaj/rtl-sdr/blob/master/src/rtl_tcp.c#L324
+//*-----------------------------------------------------------------------------------------------------------------
 void MainWindow::sendCommand(unsigned char cmd_num, unsigned value)
 {
-    //docs: https://github.com/pinkavaj/rtl-sdr/blob/master/src/rtl_tcp.c#L324
     unsigned char cmd[5];
     cmd[0] = cmd_num; //set_freq
     cmd[1] = (value>>24)&0xff;
@@ -771,44 +948,4 @@ void MainWindow::sendCommand(unsigned char cmd_num, unsigned value)
     cmd[3] = (value>>8)&0xff;
     cmd[4] = value&0xff;
     procDistrib.write((char*)cmd, 5);
-}
-
-void MainWindow::on_lcdNumberPanel_valueChanged(int val)
-{
-    ui->lcdNumberPanel->setSmallDecimalPoint(true);
-    ui->lcdNumberPanel->display(float(val/1000));  //* Intervention to update LCD
-
-}
-void MainWindow::on_spinFreq_valueChanged(int val)
-{
-    qDebug() << "on_spinFreq_valueChanged() " << val;
-    ui->spinCenter->setValue(ui->spinFreq->value()-ui->spinOffset->value());
-
-    sendCommand(RTLTCP_SET_FREQ, ui->spinCenter->value());
-    if (cat->SetFrequency != ui->spinFreq->value()) {
-        cat->SetFrequency=ui->spinFreq->value();
-    }
-    //procDemod.write("\x01\x05\x55\xa9\x60");
-    //procDemod.write("macska\n");
-}
-
-void MainWindow::on_spinOffset_valueChanged(int arg1)
-{
-    setShift();
-    ui->spinFreq->setValue(ui->spinCenter->value()+ui->spinOffset->value());
-    ui->lcdNumberPanel->display(float(ui->spinCenter->value()+ui->spinOffset->value())/1000);
-
-    
-}
-
-void MainWindow::on_spinCenter_valueChanged(int arg1)
-{
-    sendCommand(RTLTCP_SET_FREQ, ui->spinCenter->value());
-    ui->spinFreq->setValue(ui->spinCenter->value()+ui->spinOffset->value());
-    ui->lcdNumberPanel->display(float(ui->spinCenter->value()+ui->spinOffset->value())/1000);
-}
-
-void MainWindow::on_comboDirectSamp_currentIndexChanged(int index)
-{
-    sendCommand(RTLTCP_SET_DIRECT_SAMPLING,ui->comboDirectSamp->currentIndex());
 }

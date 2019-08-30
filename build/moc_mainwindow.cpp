@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
     QByteArrayData data[42];
-    char stringdata0[628];
+    char stringdata0[633];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -55,22 +55,22 @@ QT_MOC_LITERAL(22, 371, 26), // "on_spinCenter_valueChanged"
 QT_MOC_LITERAL(23, 398, 38), // "on_comboDirectSamp_currentInd..."
 QT_MOC_LITERAL(24, 437, 5), // "index"
 QT_MOC_LITERAL(25, 443, 25), // "on_toggleTransmit_toggled"
-QT_MOC_LITERAL(26, 469, 15), // "on_valueChanged"
-QT_MOC_LITERAL(27, 485, 1), // "v"
-QT_MOC_LITERAL(28, 487, 7), // "power2S"
-QT_MOC_LITERAL(29, 495, 1), // "s"
-QT_MOC_LITERAL(30, 497, 14), // "openSerialPort"
-QT_MOC_LITERAL(31, 512, 15), // "closeSerialPort"
-QT_MOC_LITERAL(32, 528, 9), // "writeData"
-QT_MOC_LITERAL(33, 538, 4), // "data"
-QT_MOC_LITERAL(34, 543, 9), // "writeChar"
-QT_MOC_LITERAL(35, 553, 4), // "byte"
-QT_MOC_LITERAL(36, 558, 1), // "d"
-QT_MOC_LITERAL(37, 560, 8), // "readData"
-QT_MOC_LITERAL(38, 569, 11), // "handleError"
-QT_MOC_LITERAL(39, 581, 28), // "QSerialPort::SerialPortError"
-QT_MOC_LITERAL(40, 610, 5), // "error"
-QT_MOC_LITERAL(41, 616, 11) // "handleTimer"
+QT_MOC_LITERAL(26, 469, 20), // "on_dial_valueChanged"
+QT_MOC_LITERAL(27, 490, 1), // "v"
+QT_MOC_LITERAL(28, 492, 7), // "power2S"
+QT_MOC_LITERAL(29, 500, 1), // "s"
+QT_MOC_LITERAL(30, 502, 14), // "openSerialPort"
+QT_MOC_LITERAL(31, 517, 15), // "closeSerialPort"
+QT_MOC_LITERAL(32, 533, 9), // "writeData"
+QT_MOC_LITERAL(33, 543, 4), // "data"
+QT_MOC_LITERAL(34, 548, 9), // "writeChar"
+QT_MOC_LITERAL(35, 558, 4), // "byte"
+QT_MOC_LITERAL(36, 563, 1), // "d"
+QT_MOC_LITERAL(37, 565, 8), // "readData"
+QT_MOC_LITERAL(38, 574, 11), // "handleError"
+QT_MOC_LITERAL(39, 586, 28), // "QSerialPort::SerialPortError"
+QT_MOC_LITERAL(40, 615, 5), // "error"
+QT_MOC_LITERAL(41, 621, 11) // "handleTimer"
 
     },
     "MainWindow\0on_toggleWFM_toggled\0\0"
@@ -86,11 +86,11 @@ QT_MOC_LITERAL(41, 616, 11) // "handleTimer"
     "arg1\0on_spinCenter_valueChanged\0"
     "on_comboDirectSamp_currentIndexChanged\0"
     "index\0on_toggleTransmit_toggled\0"
-    "on_valueChanged\0v\0power2S\0s\0openSerialPort\0"
-    "closeSerialPort\0writeData\0data\0writeChar\0"
-    "byte\0d\0readData\0handleError\0"
-    "QSerialPort::SerialPortError\0error\0"
-    "handleTimer"
+    "on_dial_valueChanged\0v\0power2S\0s\0"
+    "openSerialPort\0closeSerialPort\0writeData\0"
+    "data\0writeChar\0byte\0d\0readData\0"
+    "handleError\0QSerialPort::SerialPortError\0"
+    "error\0handleTimer"
 };
 #undef QT_MOC_LITERAL
 
@@ -195,7 +195,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 16: _t->on_spinCenter_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 17: _t->on_comboDirectSamp_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 18: _t->on_toggleTransmit_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 19: _t->on_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 19: _t->on_dial_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 20: { int _r = _t->power2S((*reinterpret_cast< float(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
         case 21: _t->openSerialPort(); break;
