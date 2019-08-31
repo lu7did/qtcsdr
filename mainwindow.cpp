@@ -59,12 +59,20 @@ void setWord(unsigned char* SysWord,unsigned char v, bool val) {
 #include <wiringPi.h>
 #include <wiringSerial.h>
 #include "../PixiePi/src/lib/CAT817.h"
+#include "../PixiePi/src/pixie/pixie.h"
+
 #include <QTimer>
 
 CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+bool running=true;
+void setPTT(bool statePTT);
+
+#include "../PixiePi/src/iambic/iambic.c"
+
+
 #include <QDebug>
 #include <QProcess>
 #include <QSerialPort>
@@ -106,27 +114,15 @@ CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
 
 #define NMUX_MEMORY_MBYTE 50
 
-//*------------------------------------------------------------------------------------------------------------------------------------
-//* getNextArgAfter
-//* process arguments
-//*------------------------------------------------------------------------------------------------------------------------------------
-QString MainWindow::getNextArgAfter(QString what)
-{
-    if(QCoreApplication::arguments().contains(what))
-    {
-        int indexOfWhat = QCoreApplication::arguments().indexOf(what);
-        if(QCoreApplication::arguments().count()>indexOfWhat+1)
-        {
-            if(!QCoreApplication::arguments().at(indexOfWhat+1).startsWith("--"))
-            {
-                return QCoreApplication::arguments().at(indexOfWhat+1);
-            }
-        }
+MainWindow* h=NULL;
+void setPTT(bool statePTT) {
+
+    if (h!=NULL) {
+       qDebug() << "Test Power2S(-119 dBm)" << h->power2S(-119.0);
     }
-    return "";
+    fprintf(stderr,"setPTT()\n");
+    return;
 }
-
-
 //*------------------------------------------------------------------------------------------------------------------------------------
 //* MainWindow GUI constructor
 //* GUI constructor and program initialization
@@ -141,6 +137,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
 //*--- Initialize status of main controls
+    h=this;
+    iambic_init();
 
     ui->labelCAT->setHidden(false);
     ui->labelPWR->setHidden(false);
@@ -180,7 +178,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QString nextArg;
 
+
 //*--- initialize CAT hooks
+
 
     cat->sendChar=(CALLBACK)&MainWindow::CATCallBack;
     cat->changeFreq=(CALLBACK)&MainWindow::CATchangeFreq;
@@ -250,12 +250,33 @@ MainWindow::MainWindow(QWidget *parent) :
 //*---------------------------------------------------------------------------------------------------------------
 MainWindow::~MainWindow()
 {
+    running=false;
+    iambic_close();
     if(ui->toggleRun->isChecked()){
        on_toggleRun_toggled(false); //so that we kill all subprocesses
     }
     delete ui;
 }
 
+//*------------------------------------------------------------------------------------------------------------------------------------
+//* getNextArgAfter
+//* process arguments
+//*------------------------------------------------------------------------------------------------------------------------------------
+QString MainWindow::getNextArgAfter(QString what)
+{
+    if(QCoreApplication::arguments().contains(what))
+    {
+        int indexOfWhat = QCoreApplication::arguments().indexOf(what);
+        if(QCoreApplication::arguments().count()>indexOfWhat+1)
+        {
+            if(!QCoreApplication::arguments().at(indexOfWhat+1).startsWith("--"))
+            {
+                return QCoreApplication::arguments().at(indexOfWhat+1);
+            }
+        }
+    }
+    return "";
+}
 
 //*------------------------------------------------[CAT Management]-------------------------------------------------
 //* This is the implementation of the methods contained in the CAT817.h library, the program emulates a Yaesu FT-817
@@ -311,6 +332,7 @@ void MainWindow::writeChar(byte d)
 
 {
 
+     qDebug() << "writeChar() " << d;
 }
 //*--- write data back to the controller program after processing the CAT command
 void MainWindow::writeData(const QByteArray &data)

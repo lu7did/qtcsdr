@@ -14,7 +14,7 @@ rigctld --model=$(rigctl -l | grep "FT-817" | awk '{print $1}') -r /tmp/ttyv0 -t
 RIGCTL=$!
 echo "rigctld PID($RIGCTL)"
 
-./build/qtcsdr
+sudo ./build/qtcsdr
 
 #sudo /home/pi/PixiePi/bin/pixie -g 4 -f 7032000 -F 700 -G 20 -s /tmp/ttyv1 -d -i /home/pi/PixiePi/src/pixie/pixie.cfg
 

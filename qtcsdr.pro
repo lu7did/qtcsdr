@@ -41,12 +41,14 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = qtcsdr
 TEMPLATE = app
 
-LIBS += -lwiringPi -lwiringPiDev
+LIBS += -lwiringPi -lwiringPiDev -lpthread -lpigpio
 SOURCES += main.cpp\
         mainwindow.cpp \
+        ../PixiePi/src/iambic/iambic.c \
     qmyspectrumwidget.cpp
 
 HEADERS  += mainwindow.h \
+    ../PixiePi/src/pixie/pixie.h \
     qmyspectrumwidget.h
 
 FORMS    += mainwindow.ui

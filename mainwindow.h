@@ -74,6 +74,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    int  power2S(float s);
+    Ui::MainWindow *ui;
+
+
 private slots:
     void on_toggleWFM_toggled(bool checked);
     void on_toggleNFM_toggled(bool checked);
@@ -101,7 +105,6 @@ private slots:
     void on_toggleTransmit_toggled(bool checked);
     void on_dial_valueChanged(int v);
 
-    int  power2S(float s);
     void openSerialPort();
     void closeSerialPort();
     //void about();
@@ -113,7 +116,6 @@ private slots:
     void handleTimer();
 
 private:
-    Ui::MainWindow *ui;
     QList<QPushButton*> modsButtons;
     void untoggleOtherModButtonsThan(QPushButton* pb);
     void sendCommand(unsigned char cmd_num, unsigned value);
@@ -129,8 +131,9 @@ private:
     void CATgetTX();
 
     void CATCallBack();
-    QString getNextArgAfter(QString what);
-    QString getModulatorCommand();
+
+    QString  getNextArgAfter(QString what);
+    QString  getModulatorCommand();
     QProcess procDemod;
     QProcess procDistrib;
     QProcess procIQServer;
@@ -152,7 +155,7 @@ private:
     QString alsaDevice;
 
     bool fchangeMode=false;
-
+    bool running=true;
 
     int TSEC=10;
     int TCAT=20;

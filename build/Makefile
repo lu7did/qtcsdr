@@ -36,7 +36,7 @@ DISTNAME      = qtcsdr1.0.0
 DISTDIR = /home/pi/qtcsdr/build/.tmp/qtcsdr1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1
-LIBS          = $(SUBLIBS) -lwiringPi -lwiringPiDev -lQt5Widgets -lQt5Gui -lQt5SerialPort -lQt5Core -lGLESv2 -lpthread 
+LIBS          = $(SUBLIBS) -lwiringPi -lwiringPiDev -lpigpio -lQt5Widgets -lQt5Gui -lQt5SerialPort -lQt5Core -lGLESv2 -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -120,6 +120,7 @@ DIST          = /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/lex.prf \
 		../../qtcsdr.pro ../mainwindow.h \
+		../../PixiePi/src/pixie/pixie.h \
 		../qmyspectrumwidget.h ../main.cpp \
 		../mainwindow.cpp \
 		../qmyspectrumwidget.cpp
@@ -283,7 +284,7 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../mainwindow.h ../qmyspectrumwidget.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../mainwindow.h ../../PixiePi/src/pixie/pixie.h ../qmyspectrumwidget.h $(DISTDIR)/
 	$(COPY_FILE) --parents ../main.cpp ../mainwindow.cpp ../qmyspectrumwidget.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../mainwindow.ui $(DISTDIR)/
 
@@ -346,9 +347,11 @@ main.o: ../main.cpp ../mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../main.cpp
 
 mainwindow.o: ../mainwindow.cpp ../../PixiePi/src/lib/CAT817.h \
+		../../PixiePi/src/pixie/pixie.h \
 		../mainwindow.h \
 		ui_mainwindow.h \
-		../qmyspectrumwidget.h
+		../qmyspectrumwidget.h \
+		../../PixiePi/src/iambic/iambic.c
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../mainwindow.cpp
 
 qmyspectrumwidget.o: ../qmyspectrumwidget.cpp ../qmyspectrumwidget.h
