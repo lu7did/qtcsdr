@@ -227,16 +227,66 @@ Don't forget to remove the test file from the SD card.
 Building on top of the wonderful qtcsdr implementation originally by HA7ILM
 **qtcsdr** makes a ham transceiver out of your Raspberry Pi and RTL-SDR!
 
-# Overall description and Architecture
+# Overall description
+This version of **qtcsdr** features the following functions:
+
+- Features additional modes:
+-- CW direct.
+-- CW Inverse.
+-- Generic DSP (external DSP processor)
+-- Packet (processor specialized for packet).
+- LCD style control panel featuring:
+-- S-Meter.
+-- Mode indication.
+-- Current VFO.
+- Controls for lower and higher cut frequencies.
+- Band control.
+- Dual VFO.
+- Split mode.
+- RIT control.
+- Lock control.
+- CAT implemented (emulates a Yaesu FT-817 rig).
+
+# Architecture
+
+The original **qtcsdr** architecture is preserved and expanded. The main components are:
+- Qt based GUI front-end.
+- Background DSP processors based on rpitx and csdr.
+- Additional libraries to implement some functions such as CAT et.al.
 
 # GUI
+
+The additional functionality drove changes in the GUI in order to accomodate ways to control these features. A screen shoot with the new features follows
 
 ![Alt Text](docs/qtcsdr.jpg?raw=true "qtcsdr GUI")
 
 # Pre-requisites
 
+On top of the pre-requisites to implement the original qtcsdr (see above) the following additional packages needs to be installed.
+
+- PixiePi
+-- sudo git clone http://www.github.com/lu7did/PixiePi
+-- cd /home/pi/PixiePi/src
+-- sudo make
+- socat
+-- sudo apt-get update
+-- sudo apt-get install socat
+
 # Installation
+
+- Extended (forked) **qtcsdr**
+-- git clone https://github.com/lu7did/qtcsdr
+-- cd qtcsdr
+-- ./rpi-install.sh
+-- ./rpi-test.sh
+
 
 # Configuration
 
+# Usage
 
+## CW Operation
+
+## SSB Operation
+
+## WSJTX Modes
