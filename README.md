@@ -227,6 +227,14 @@ Don't forget to remove the test file from the SD card.
 Building on top of the wonderful qtcsdr implementation originally by HA7ILM
 **qtcsdr** makes a ham transceiver out of your Raspberry Pi and RTL-SDR!
 
-# Overall description
+# Overall description and Architecture
+
+# GUI
+
+# Pre-requisites
+
+# Installation
+
+# Configuration
 
 
