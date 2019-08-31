@@ -230,22 +230,22 @@ Building on top of the wonderful qtcsdr implementation originally by HA7ILM
 # Overall description
 This version of **qtcsdr** features the following functions:
 
-- Features additional modes:
--- CW direct.
--- CW Inverse.
--- Generic DSP (external DSP processor)
--- Packet (processor specialized for packet).
-- LCD style control panel featuring:
--- S-Meter.
--- Mode indication.
--- Current VFO.
-- Controls for lower and higher cut frequencies.
-- Band control.
-- Dual VFO.
-- Split mode.
-- RIT control.
-- Lock control.
-- CAT implemented (emulates a Yaesu FT-817 rig).
+1 Features additional modes:
+-CW direct.
+-CW Inverse.
+-Generic DSP (external DSP processor)
+-Packet (processor specialized for packet).
+2 LCD style control panel featuring:
+-S-Meter.
+-Mode indication.
+-Current VFO.
+3 Controls for lower and higher cut frequencies.
+4 Band control.
+5 Dual VFO.
+6 Split mode.
+7 RIT control.
+8 Lock control.
+9 CAT implemented (emulates a Yaesu FT-817 rig).
 
 # Architecture
 
@@ -264,21 +264,21 @@ The additional functionality drove changes in the GUI in order to accomodate way
 
 On top of the pre-requisites to implement the original qtcsdr (see above) the following additional packages needs to be installed.
 
-- PixiePi
--- sudo git clone http://www.github.com/lu7did/PixiePi
--- cd /home/pi/PixiePi/src
+1 PixiePi
+-sudo git clone http://www.github.com/lu7did/PixiePi
+-cd /home/pi/PixiePi/src
 -- sudo make
-- socat
--- sudo apt-get update
--- sudo apt-get install socat
+2 socat
+-sudo apt-get update
+-sudo apt-get install socat
 
 # Installation
 
-- Extended (forked) **qtcsdr**
--- git clone https://github.com/lu7did/qtcsdr
--- cd qtcsdr
--- ./rpi-install.sh
--- ./rpi-test.sh
+1 Extended (forked) **qtcsdr**
+-git clone https://github.com/lu7did/qtcsdr
+-cd qtcsdr
+-./rpi-install.sh
+-./rpi-test.sh
 
 
 # Configuration
