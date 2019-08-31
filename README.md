@@ -231,14 +231,14 @@ Building on top of the wonderful qtcsdr implementation originally by HA7ILM
 This version of **qtcsdr** features the following functions:
 
 - Features additional modes:
-  1 CW direct.
-  2 CW Inverse.
-  3 Generic DSP (external DSP processor)
-  4 Packet (processor specialized for packet).
-  5 LCD style control panel featuring:
-  6 S-Meter.
-  7 Mode indication.
-  8 Current VFO.
+     - CW direct.
+     - CW Inverse.
+     - Generic DSP (external DSP processor)
+     - Packet (processor specialized for packet).
+     - LCD style control panel featuring:
+     - S-Meter.
+     - Mode indication.
+     - Current VFO.
 - Controls for lower and higher cut frequencies.
 - Band control.
 - Dual VFO.
@@ -250,9 +250,10 @@ This version of **qtcsdr** features the following functions:
 # Architecture
 
 The original **qtcsdr** architecture is preserved and expanded. The main components are:
-1 Qt based GUI front-end.
-2 Background DSP processors based on rpitx and csdr.
-3 Additional libraries to implement some functions such as CAT et.al.
+
+- Qt based GUI front-end.
+- Background DSP processors based on rpitx and csdr.
+- Additional libraries to implement some functions such as CAT et.al.
 
 # GUI
 
@@ -264,21 +265,21 @@ The additional functionality drove changes in the GUI in order to accomodate way
 
 On top of the pre-requisites to implement the original qtcsdr (see above) the following additional packages needs to be installed.
 
-1 PixiePi
-  - sudo git clone http://www.github.com/lu7did/PixiePi
-  - cd /home/pi/PixiePi/src
-  - sudo make
-2 socat
-  - sudo apt-get update
-  - sudo apt-get install socat
+- PixiePi
+      - sudo git clone http://www.github.com/lu7did/PixiePi
+      - cd /home/pi/PixiePi/src
+      - sudo make
+- socat
+      - sudo apt-get update
+      - sudo apt-get install socat
 
 # Installation
 
-1 Extended (forked) **qtcsdr**
-  - git clone https://github.com/lu7did/qtcsdr
-  - cd qtcsdr
-  - ./rpi-install.sh
-  - ./rpi-test.sh
+- Extended (forked) **qtcsdr**
+      - git clone https://github.com/lu7did/qtcsdr
+      - cd qtcsdr
+      - ./rpi-install.sh
+      - ./rpi-test.sh
 
 
 # Configuration
