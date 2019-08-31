@@ -235,17 +235,17 @@ This version of **qtcsdr** features the following functions:
   - CW Inverse.
   - Generic DSP (external DSP processor)
   - Packet (processor specialized for packet).
-2 LCD style control panel featuring:
+  - LCD style control panel featuring:
   - S-Meter.
   - Mode indication.
   - Current VFO.
-3 Controls for lower and higher cut frequencies.
-4 Band control.
-5 Dual VFO.
-6 Split mode.
-7 RIT control.
-8 Lock control.
-9 CAT implemented (emulates a Yaesu FT-817 rig).
+2 Controls for lower and higher cut frequencies.
+3 Band control.
+4 Dual VFO.
+5 Split mode.
+6 RIT control.
+7 Lock control.
+8 CAT implemented (emulates a Yaesu FT-817 rig).
 
 # Architecture
 
