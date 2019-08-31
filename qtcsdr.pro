@@ -44,8 +44,7 @@ TEMPLATE = app
 LIBS += -lwiringPi -lwiringPiDev -lpthread -lpigpio
 SOURCES += main.cpp\
         mainwindow.cpp \
-        ../PixiePi/src/iambic/iambic.c \
-    qmyspectrumwidget.cpp
+        qmyspectrumwidget.cpp
 
 HEADERS  += mainwindow.h \
     ../PixiePi/src/pixie/pixie.h \

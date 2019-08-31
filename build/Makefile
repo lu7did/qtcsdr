@@ -350,8 +350,7 @@ mainwindow.o: ../mainwindow.cpp ../../PixiePi/src/lib/CAT817.h \
 		../../PixiePi/src/pixie/pixie.h \
 		../mainwindow.h \
 		ui_mainwindow.h \
-		../qmyspectrumwidget.h \
-		../../PixiePi/src/iambic/iambic.c
+		../qmyspectrumwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../mainwindow.cpp
 
 qmyspectrumwidget.o: ../qmyspectrumwidget.cpp ../qmyspectrumwidget.h

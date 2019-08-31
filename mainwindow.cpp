@@ -70,7 +70,7 @@ CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
 bool running=true;
 void setPTT(bool statePTT);
 
-#include "../PixiePi/src/iambic/iambic.c"
+//#include "../PixiePi/src/iambic/iambic.c"
 
 
 #include <QDebug>
@@ -113,8 +113,17 @@ void setPTT(bool statePTT);
 #define CMD_TX_PKT  "pgroup bash -c \"%ARECORD% | csdr convert_i16_f | csdr dsb_fc | csdr bandpass_fir_fft_cc 0 0.1 0.01 | csdr gain_ff 2 | csdr shift_addition_cc 0.2 | (gksu touch; sudo rpitx -i- -m IQFLOAT -f %TXFREQ_SSB%)\""
 
 #define NMUX_MEMORY_MBYTE 50
+//#*----------------------------------------------------------------------------------------------------------------------------------------------------
+//*                                                         Callback and IPC hooks
+//*-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-MainWindow* h=NULL;
+//*-----------------------------------------------------------------------------------------------------------------------------------------------------
+//* setPTT
+//* build time reference for iambic.c
+//* called when the transmitter needs to be turned on
+//*-----------------------------------------------------------------------------------------------------------------------------------------------------
+MainWindow* h=NULL;       // Pointer to GUI main window to be initialized within the CONSTRUCTOR
+
 void setPTT(bool statePTT) {
 
     if (h!=NULL) {
@@ -137,8 +146,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
 //*--- Initialize status of main controls
-    h=this;
-    iambic_init();
+    h=this;          // Reference to the GUI main window to be used by non Qt functions
+//    iambic_init();
 
     ui->labelCAT->setHidden(false);
     ui->labelPWR->setHidden(false);
@@ -250,8 +259,8 @@ MainWindow::MainWindow(QWidget *parent) :
 //*---------------------------------------------------------------------------------------------------------------
 MainWindow::~MainWindow()
 {
-    running=false;
-    iambic_close();
+//    running=false;
+//    iambic_close();
     if(ui->toggleRun->isChecked()){
        on_toggleRun_toggled(false); //so that we kill all subprocesses
     }

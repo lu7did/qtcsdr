@@ -385,7 +385,7 @@ public:
         labelMODE->setFont(font3);
         labelMETER = new QLabel(widgetControls);
         labelMETER->setObjectName(QStringLiteral("labelMETER"));
-        labelMETER->setGeometry(QRect(370, 28, 31, 16));
+        labelMETER->setGeometry(QRect(365, 28, 40, 16));
         QFont font4;
         font4.setPointSize(8);
         font4.setBold(true);

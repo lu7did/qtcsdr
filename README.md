@@ -231,6 +231,8 @@ Building on top of the wonderful qtcsdr implementation originally by HA7ILM
 
 # GUI
 
+![Alt Text](docs/qtcsdr.jpg?raw=true "qtcsdr GUI")
+
 # Pre-requisites
 
 # Installation
