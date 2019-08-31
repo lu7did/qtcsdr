@@ -230,22 +230,22 @@ Building on top of the wonderful qtcsdr implementation originally by HA7ILM
 # Overall description
 This version of **qtcsdr** features the following functions:
 
-1 Features additional modes:
-  - CW direct.
-  - CW Inverse.
-  - Generic DSP (external DSP processor)
-  - Packet (processor specialized for packet).
-  - LCD style control panel featuring:
-  - S-Meter.
-  - Mode indication.
-  - Current VFO.
-2 Controls for lower and higher cut frequencies.
-3 Band control.
-4 Dual VFO.
-5 Split mode.
-6 RIT control.
-7 Lock control.
-8 CAT implemented (emulates a Yaesu FT-817 rig).
+- Features additional modes:
+  1 CW direct.
+  2 CW Inverse.
+  3 Generic DSP (external DSP processor)
+  4 Packet (processor specialized for packet).
+  5 LCD style control panel featuring:
+  6 S-Meter.
+  7 Mode indication.
+  8 Current VFO.
+- Controls for lower and higher cut frequencies.
+- Band control.
+- Dual VFO.
+- Split mode.
+- RIT control.
+- Lock control.
+- CAT implemented (emulates a Yaesu FT-817 rig).
 
 # Architecture
 
