@@ -220,3 +220,13 @@ Don't forget to remove the test file from the SD card.
 ### Processing chain in transit mode 
 
 ![qtcsdr](/images/qtcsdr-tx.png?raw=true)
+=======================================================================================================================================================
+
+* Updated Transceiver (LU7DID fork)
+
+Building on top of the wonderful qtcsdr implementation originally by HA7ILM
+**qtcsdr** makes a ham transceiver out of your Raspberry Pi and RTL-SDR!
+
+* Overall description
+
+
