@@ -41,7 +41,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = qtcsdr
 TEMPLATE = app
 
-LIBS += -lwiringPi -lwiringPiDev -lpthread -lpigpio
+LIBS += -lwiringPi -lwiringPiDev -lpthread -lpigpio /home/pi/librpitx/src/librpitx.a
 SOURCES += main.cpp\
         mainwindow.cpp \
         qmyspectrumwidget.cpp

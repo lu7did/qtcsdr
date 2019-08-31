@@ -58,19 +58,63 @@ void setWord(unsigned char* SysWord,unsigned char v, bool val) {
 #include <iostream>
 #include <wiringPi.h>
 #include <wiringSerial.h>
-#include "../PixiePi/src/lib/CAT817.h"
-#include "../PixiePi/src/pixie/pixie.h"
 
-#include <QTimer>
-
-CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QTimer>
+
+#include "../PixiePi/src/pixie/pixie.h"
+#include "../PixiePi/src/lib/CAT817.h"
+#include "../PixiePi/src/lib/DDS.h"
+#include "../PixiePi/src/lib/VFOSystem.h"
+
+CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
+DDS *dds=new DDS(NULL);
 
 bool running=true;
 void setPTT(bool statePTT);
+byte FT817;
+int  shift=VFO_SHIFT;
+int  ritofs=0;
+int  step=0;
+byte ddspower=MAXLEVEL;
+byte ptt=KEYER_OUT_GPIO;
+byte txonly=ALWAYS;
+int  keyer_brk=KEYER_BRK;
+byte vfo[2];
+//*---- Keyer specific definitions
+byte sidetone_gpio=SIDETONE_GPIO;
+float ppm=1000.0;
+struct sigaction sa;
+byte keepalive=0;
+byte backlight=BACKLIGHT_DELAY;
+char port[80];
+long catbaud=CATBAUD;
+byte gpio=GPIO04;
+bool fSwap=false;
 
-//#include "../PixiePi/src/iambic/iambic.c"
+int maxrit=MAXRIT;
+int minrit=MINRIT;
+int ritstep=RITSTEP;
+int ritstepd=RITSTEPD;
+
+int vfoLower=88000000;
+int vfoUpper=107000000;
+int vfoCenter=6900000;
+byte vfoAB=VFOA;
+
+//*--- Keyer related memory definitions
+
+char snd_dev[64]="hw:0";
+
+const char   *PROGRAMID="qtcsdr";
+const char   *PROG_VERSION="2.0";
+const char   *PROG_BUILD="01";
+const char   *COPYRIGHT="(c) LU7DID 2019";
+
+#include "../PixiePi/src/iambic/iambic.c"
+
+
 
 
 #include <QDebug>
@@ -147,7 +191,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //*--- Initialize status of main controls
     h=this;          // Reference to the GUI main window to be used by non Qt functions
-//    iambic_init();
+    iambic_init();
 
     ui->labelCAT->setHidden(false);
     ui->labelPWR->setHidden(false);
@@ -156,6 +200,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->labelPWR->setStyleSheet("QLabel { background-color : green; }");
     ui->labelPTT->setStyleSheet("QLabel { background-color : #800000; }");
 
+
     ui->progressBarMeter->setMinimum(0);
     ui->progressBarMeter->setMaximum(15);
 
@@ -163,6 +208,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->labelMODE->setHidden(true);
     ui->labelMETER->setHidden(true);
     ui->progressBarMeter->setHidden(true);
+
 
     ui->lcdNumberPanel->setStyleSheet("QLabel { background-color : #FFCF9E; }");
 
@@ -175,6 +221,8 @@ MainWindow::MainWindow(QWidget *parent) :
     dialChanged=false;
     TDIAL=3;
 
+    ui->spinCenter->setEnabled(true);
+    ui->spinOffset->setEnabled(true);
 
     if(QCoreApplication::arguments().contains("--rpitx"))
     {
@@ -196,6 +244,7 @@ MainWindow::MainWindow(QWidget *parent) :
     cat->changeStatus=(CALLBACK)&MainWindow::CATchangeStatus;
     cat->changeMode=(CALLBACK)&MainWindow::CATchangeMode;
     cat->METER=0x00;
+
 
 //*--- Different sound devices
 
@@ -246,6 +295,28 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->dial,SIGNAL(valueChanged(int)),this,SLOT(on_dial_valueChanged(int)));
     connect(m_serial, &QSerialPort::readyRead, this, &MainWindow::readData);
 
+//*--- initialize CAT and DDS
+
+   vfo[VFOA]=vfoLower;
+   vfo[VFOB]=vfoUpper;
+   vfoAB=VFOA;
+   (vfoAB==VFOA?ui->labelVFO->setText("VFOA"):ui->labelVFO->setText("VFOB"));
+   
+
+   setWord(&FT817,SPLIT,false);
+   setWord(&FT817,RIT,false);
+   setWord(&FT817,LOCK,false);
+   setWord(&FT817,TXONLY,true);
+   cat->FT817=FT817;
+
+
+//*--- Generate DDS (code excerpt mainly from tune.cpp by Evariste Courjaud F5OEO
+
+    dds->gpio=byte(gpio);
+    dds->power=byte(ddspower);
+    cat->POWER=dds->power;
+
+
 //*--- Activate timers
 
     t->start(100);
@@ -259,8 +330,10 @@ MainWindow::MainWindow(QWidget *parent) :
 //*---------------------------------------------------------------------------------------------------------------
 MainWindow::~MainWindow()
 {
-//    running=false;
-//    iambic_close();
+
+    delete(dds);
+    running=false;
+    iambic_close();
     if(ui->toggleRun->isChecked()){
        on_toggleRun_toggled(false); //so that we kill all subprocesses
     }
@@ -463,6 +536,10 @@ void MainWindow::on_toggleRun_toggled(bool checked)
     if(checked)
     {
 
+        ui->spinCenter->setEnabled(false);
+        ui->spinOffset->setEnabled(false);
+        ui->comboDirectSamp->setEnabled(false);
+
 //*--- start the waterfall
 
         ui->widgetFFT->sampleRate=ui->comboSampRate->currentText().toInt();
@@ -530,6 +607,9 @@ void MainWindow::on_toggleRun_toggled(bool checked)
     else
     {
 
+        ui->spinCenter->setEnabled(true);
+        ui->spinOffset->setEnabled(true);
+        ui->comboDirectSamp->setEnabled(true);
         ui->comboSampRate->setEnabled(true);
 
 //*--- stop pipe
@@ -668,12 +748,28 @@ void MainWindow::on_lcdNumberPanel_valueChanged(int val)
 void MainWindow::on_spinFreq_valueChanged(int val)
 {
     qDebug() << "on_spinFreq_valueChanged() " << val;
-    ui->spinCenter->setValue(ui->spinFreq->value()-ui->spinOffset->value());
+
+    int LO=ui->spinCenter->value();
+    int SR=ui->comboSampRate->currentText().toInt();
+
+    if (val > (LO+(SR/2))) {   //* Frequency higher than LO+SR/2 out of margin, correct LO
+       LO=LO+(SR/4);
+       ui->spinCenter->setValue(LO);
+    }
+
+    if (val < (LO-(SR/2))) {
+       LO=LO-(SR/4);
+       ui->spinCenter->setValue(LO);
+    }
+
+    ui->spinOffset->setValue(ui->spinFreq->value()-ui->spinCenter->value());
+    ui->lcdNumberPanel->display(float(ui->spinFreq->value()/1000));
 
     sendCommand(RTLTCP_SET_FREQ, ui->spinCenter->value());
     if (cat->SetFrequency != ui->spinFreq->value()) {
         cat->SetFrequency=ui->spinFreq->value();
     }
+
 }
 //*---------------------------------------------------------------------------------------------------
 //* on_spinOffset_valueChanged
@@ -681,9 +777,10 @@ void MainWindow::on_spinFreq_valueChanged(int val)
 //*---------------------------------------------------------------------------------------------------
 void MainWindow::on_spinOffset_valueChanged(int arg1)
 {
+    qDebug() << "on_spinOffset " << arg1;
     setShift();
     ui->spinFreq->setValue(ui->spinCenter->value()+ui->spinOffset->value());
-    ui->lcdNumberPanel->display(float(ui->spinCenter->value()+ui->spinOffset->value())/1000);
+    ui->lcdNumberPanel->display(float(ui->spinFreq->value())/1000);
 
     
 }
@@ -693,9 +790,10 @@ void MainWindow::on_spinOffset_valueChanged(int arg1)
 //*----------------------------------------------------------------------------------------------------
 void MainWindow::on_spinCenter_valueChanged(int arg1)
 {
+    qDebug() << "on_spinCenter " << arg1;
     sendCommand(RTLTCP_SET_FREQ, ui->spinCenter->value());
     ui->spinFreq->setValue(ui->spinCenter->value()+ui->spinOffset->value());
-    ui->lcdNumberPanel->display(float(ui->spinCenter->value()+ui->spinOffset->value())/1000);
+    ui->lcdNumberPanel->display(float(ui->spinFreq->value()/1000));
 }
 //*----------------------------------------------------------------------------------------------------
 //* on_comboDirectSamp
@@ -798,9 +896,12 @@ void MainWindow::handleTimer() {
       TDIAL--;
       if (TDIAL==0) {
          if (this->dialChanged == true) {
-            ui->spinFreq->setValue(ui->spinFreq->value()+(this->dialDelta*this->dialStep));
-            //qDebug() << "Dial changed offset" << dialDelta << ui->spinFreq->value();;
+            int d=this->dialDelta*this->dialStep;
+            int f=ui->spinFreq->value()+d;
+            qDebug() << "handleTimer(): change frequency " << f << d;
+            ui->spinFreq->setValue(f);
 
+            //on_spinFreq_valueChanged(f);
          }
          this->dialChanged=false;
          this->dialDelta=0;

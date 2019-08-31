@@ -79,7 +79,7 @@
        <property name="geometry">
         <rect>
          <x>360</x>
-         <y>0</y>
+         <y>-1</y>
          <width>30</width>
          <height>20</height>
         </rect>
@@ -117,7 +117,7 @@
       <widget class="QSpinBox" name="spinFreq">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>64</x>
          <y>0</y>
          <width>100</width>
          <height>20</height>
@@ -141,7 +141,7 @@
       <widget class="QSpinBox" name="spinOffset">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>64</x>
          <y>40</y>
          <width>100</width>
          <height>20</height>
@@ -169,7 +169,7 @@
        <property name="geometry">
         <rect>
          <x>300</x>
-         <y>0</y>
+         <y>-1</y>
          <width>30</width>
          <height>20</height>
         </rect>
@@ -193,7 +193,7 @@
        <property name="geometry">
         <rect>
          <x>390</x>
-         <y>0</y>
+         <y>-1</y>
          <width>30</width>
          <height>20</height>
         </rect>
@@ -217,7 +217,7 @@
        <property name="geometry">
         <rect>
          <x>420</x>
-         <y>0</y>
+         <y>-1</y>
          <width>30</width>
          <height>20</height>
         </rect>
@@ -259,7 +259,7 @@
        <property name="geometry">
         <rect>
          <x>330</x>
-         <y>0</y>
+         <y>-1</y>
          <width>30</width>
          <height>20</height>
         </rect>
@@ -279,7 +279,7 @@
       <widget class="QSpinBox" name="spinCenter">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>64</x>
          <y>20</y>
          <width>100</width>
          <height>20</height>
@@ -321,7 +321,7 @@
       <widget class="QComboBox" name="comboDirectSamp">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>64</x>
          <y>80</y>
          <width>100</width>
          <height>20</height>
@@ -393,7 +393,7 @@
       <widget class="QComboBox" name="comboSampRate">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>64</x>
          <y>60</y>
          <width>100</width>
          <height>20</height>
@@ -447,7 +447,7 @@
        <property name="geometry">
         <rect>
          <x>450</x>
-         <y>0</y>
+         <y>-1</y>
          <width>30</width>
          <height>20</height>
         </rect>
@@ -468,7 +468,7 @@
        <property name="geometry">
         <rect>
          <x>480</x>
-         <y>0</y>
+         <y>-1</y>
          <width>30</width>
          <height>20</height>
         </rect>
@@ -1041,7 +1041,7 @@
        <property name="geometry">
         <rect>
          <x>510</x>
-         <y>0</y>
+         <y>-1</y>
          <width>30</width>
          <height>20</height>
         </rect>
@@ -1118,7 +1118,7 @@
       <widget class="QLabel" name="labelVFO">
        <property name="geometry">
         <rect>
-         <x>390</x>
+         <x>393</x>
          <y>110</y>
          <width>31</width>
          <height>16</height>
@@ -1197,7 +1197,7 @@
        <property name="geometry">
         <rect>
          <x>540</x>
-         <y>0</y>
+         <y>-1</y>
          <width>30</width>
          <height>20</height>
         </rect>
@@ -1233,6 +1233,84 @@
         <bool>false</bool>
        </property>
       </widget>
+      <widget class="QLabel" name="label_5">
+       <property name="geometry">
+        <rect>
+         <x>-1</x>
+         <y>74</y>
+         <width>121</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Samp. type:</string>
+       </property>
+      </widget>
+      <zorder>label_4</zorder>
+      <zorder>label</zorder>
+      <zorder>toggleAM</zorder>
+      <zorder>label_2</zorder>
+      <zorder>spinFreq</zorder>
+      <zorder>spinOffset</zorder>
+      <zorder>toggleWFM</zorder>
+      <zorder>toggleUSB</zorder>
+      <zorder>toggleLSB</zorder>
+      <zorder>toggleRun</zorder>
+      <zorder>toggleNFM</zorder>
+      <zorder>spinCenter</zorder>
+      <zorder>label_3</zorder>
+      <zorder>comboDirectSamp</zorder>
+      <zorder>toggleTransmit</zorder>
+      <zorder>comboSampRate</zorder>
+      <zorder>toggleCW</zorder>
+      <zorder>toggleCWR</zorder>
+      <zorder>lcdNumberPanel</zorder>
+      <zorder>progressBarMeter</zorder>
+      <zorder>pushButtonAB</zorder>
+      <zorder>pushButtonA2B</zorder>
+      <zorder>pushButtonABS</zorder>
+      <zorder>pushButtonSplit</zorder>
+      <zorder>pushButtonRIT</zorder>
+      <zorder>pushButtonLock</zorder>
+      <zorder>verticalSlider</zorder>
+      <zorder>verticalSlider_2</zorder>
+      <zorder>verticalSlider_3</zorder>
+      <zorder>verticalSlider_4</zorder>
+      <zorder>verticalSlider_5</zorder>
+      <zorder>pushButtonBandVF</zorder>
+      <zorder>pushButtonBandLF</zorder>
+      <zorder>pushButtonBand160</zorder>
+      <zorder>pushButtonBand80</zorder>
+      <zorder>pushButtonBand40</zorder>
+      <zorder>pushButtonBand30</zorder>
+      <zorder>pushButtonBand20</zorder>
+      <zorder>pushButtonBand17</zorder>
+      <zorder>pushButtonBand15</zorder>
+      <zorder>pushButtonBand12</zorder>
+      <zorder>pushButtonBand10</zorder>
+      <zorder>pushButtonBand6</zorder>
+      <zorder>pushButtonBandFM</zorder>
+      <zorder>pushButtonBandAir</zorder>
+      <zorder>pushButtonBand2</zorder>
+      <zorder>pushButtonBand70</zorder>
+      <zorder>pushButtonBand012</zorder>
+      <zorder>pushButtonBandFree</zorder>
+      <zorder>toggleDSP</zorder>
+      <zorder>labelCAT</zorder>
+      <zorder>labelPWR</zorder>
+      <zorder>labelPTT</zorder>
+      <zorder>labelVFO</zorder>
+      <zorder>labelMODE</zorder>
+      <zorder>labelMETER</zorder>
+      <zorder>pushButtonBreak</zorder>
+      <zorder>togglePKT</zorder>
+      <zorder>dial</zorder>
+      <zorder>label_5</zorder>
      </widget>
     </item>
    </layout>

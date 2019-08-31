@@ -36,7 +36,7 @@ DISTNAME      = qtcsdr1.0.0
 DISTDIR = /home/pi/qtcsdr/build/.tmp/qtcsdr1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1
-LIBS          = $(SUBLIBS) -lwiringPi -lwiringPiDev -lpigpio -lQt5Widgets -lQt5Gui -lQt5SerialPort -lQt5Core -lGLESv2 -lpthread 
+LIBS          = $(SUBLIBS) -lwiringPi -lwiringPiDev -lpigpio /home/pi/librpitx/src/librpitx.a -lQt5Widgets -lQt5Gui -lQt5SerialPort -lQt5Core -lGLESv2 -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -346,11 +346,28 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 main.o: ../main.cpp ../mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../main.cpp
 
-mainwindow.o: ../mainwindow.cpp ../../PixiePi/src/lib/CAT817.h \
-		../../PixiePi/src/pixie/pixie.h \
-		../mainwindow.h \
+mainwindow.o: ../mainwindow.cpp ../mainwindow.h \
 		ui_mainwindow.h \
-		../qmyspectrumwidget.h
+		../qmyspectrumwidget.h \
+		../../PixiePi/src/pixie/pixie.h \
+		../../PixiePi/src/lib/CAT817.h \
+		../../PixiePi/src/lib/DDS.h \
+		/home/pi/librpitx/src/librpitx.h \
+		../../librpitx/src/dma.h \
+		../../librpitx/src/gpio.h \
+		../../librpitx/src/util.h \
+		../../librpitx/src/fmdmasync.h \
+		../../librpitx/src/ngfmdmasync.h \
+		../../librpitx/src/iqdmasync.h \
+		../../librpitx/src/dsp.h \
+		../../librpitx/src/serialdmasync.h \
+		../../librpitx/src/phasedmasync.h \
+		../../librpitx/src/amdmasync.h \
+		../../librpitx/src/fskburst.h \
+		../../librpitx/src/ookburst.h \
+		../../librpitx/src/atv.h \
+		../../PixiePi/src/lib/VFOSystem.h \
+		../../PixiePi/src/iambic/iambic.c
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../mainwindow.cpp
 
 qmyspectrumwidget.o: ../qmyspectrumwidget.cpp ../qmyspectrumwidget.h
