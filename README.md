@@ -231,14 +231,14 @@ Building on top of the wonderful qtcsdr implementation originally by HA7ILM
 This version of **qtcsdr** features the following functions:
 
 1 Features additional modes:
--CW direct.
--CW Inverse.
--Generic DSP (external DSP processor)
--Packet (processor specialized for packet).
+  - CW direct.
+  - CW Inverse.
+  - Generic DSP (external DSP processor)
+  - Packet (processor specialized for packet).
 2 LCD style control panel featuring:
--S-Meter.
--Mode indication.
--Current VFO.
+  - S-Meter.
+  - Mode indication.
+  - Current VFO.
 3 Controls for lower and higher cut frequencies.
 4 Band control.
 5 Dual VFO.
@@ -250,9 +250,9 @@ This version of **qtcsdr** features the following functions:
 # Architecture
 
 The original **qtcsdr** architecture is preserved and expanded. The main components are:
-- Qt based GUI front-end.
-- Background DSP processors based on rpitx and csdr.
-- Additional libraries to implement some functions such as CAT et.al.
+1 Qt based GUI front-end.
+2 Background DSP processors based on rpitx and csdr.
+3 Additional libraries to implement some functions such as CAT et.al.
 
 # GUI
 
@@ -265,20 +265,20 @@ The additional functionality drove changes in the GUI in order to accomodate way
 On top of the pre-requisites to implement the original qtcsdr (see above) the following additional packages needs to be installed.
 
 1 PixiePi
--sudo git clone http://www.github.com/lu7did/PixiePi
--cd /home/pi/PixiePi/src
--- sudo make
+  - sudo git clone http://www.github.com/lu7did/PixiePi
+  - cd /home/pi/PixiePi/src
+  - sudo make
 2 socat
--sudo apt-get update
--sudo apt-get install socat
+  - sudo apt-get update
+  - sudo apt-get install socat
 
 # Installation
 
 1 Extended (forked) **qtcsdr**
--git clone https://github.com/lu7did/qtcsdr
--cd qtcsdr
--./rpi-install.sh
--./rpi-test.sh
+  - git clone https://github.com/lu7did/qtcsdr
+  - cd qtcsdr
+  - ./rpi-install.sh
+  - ./rpi-test.sh
 
 
 # Configuration
