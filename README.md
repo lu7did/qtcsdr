@@ -266,20 +266,20 @@ The additional functionality drove changes in the GUI in order to accomodate way
 On top of the pre-requisites to implement the original qtcsdr (see above) the following additional packages needs to be installed.
 
 - PixiePi
-      - sudo git clone http://www.github.com/lu7did/PixiePi
-      - cd /home/pi/PixiePi/src
-      - sudo make
+       - sudo git clone http://www.github.com/lu7did/PixiePi
+       - cd /home/pi/PixiePi/src
+       - sudo make
 - socat
-      - sudo apt-get update
-      - sudo apt-get install socat
+       - sudo apt-get update
+       - sudo apt-get install socat
 
 # Installation
 
 - Extended (forked) **qtcsdr**
-      - git clone https://github.com/lu7did/qtcsdr
-      - cd qtcsdr
-      - ./rpi-install.sh
-      - ./rpi-test.sh
+       - git clone https://github.com/lu7did/qtcsdr
+       - cd qtcsdr
+       - ./rpi-install.sh
+       - ./rpi-test.sh
 
 
 # Configuration
