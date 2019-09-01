@@ -70,6 +70,7 @@ void setWord(unsigned char* SysWord,unsigned char v, bool val) {
 
 CAT817 *cat=new CAT817(NULL,NULL,NULL,NULL,NULL);
 DDS *dds=new DDS(NULL);
+VFOSystem *vfo=new VFOSystem(NULL,NULL,NULL,NULL);
 
 bool running=true;
 void setPTT(bool statePTT);
@@ -81,7 +82,6 @@ byte ddspower=MAXLEVEL;
 byte ptt=KEYER_OUT_GPIO;
 byte txonly=ALWAYS;
 int  keyer_brk=KEYER_BRK;
-byte vfo[2];
 //*---- Keyer specific definitions
 byte sidetone_gpio=SIDETONE_GPIO;
 float ppm=1000.0;
@@ -224,6 +224,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->spinCenter->setEnabled(true);
     ui->spinOffset->setEnabled(true);
 
+//*---- Esto es la activación del transmisor, revisar luego
+
     if(QCoreApplication::arguments().contains("--rpitx"))
     {
         ui->toggleTransmit->setEnabled(true);
@@ -287,6 +289,27 @@ MainWindow::MainWindow(QWidget *parent) :
     modsButtons.append(ui->toggleDSP);
     modsButtons.append(ui->togglePKT);
 
+
+    bandButtons.append(ui->toggleBandVF);
+    bandButtons.append(ui->toggleBandLF);
+    bandButtons.append(ui->toggleBand160);
+    bandButtons.append(ui->toggleBand80);
+    bandButtons.append(ui->toggleBand40);
+    bandButtons.append(ui->toggleBand30);
+    bandButtons.append(ui->toggleBand20);
+    bandButtons.append(ui->toggleBand17);
+    bandButtons.append(ui->toggleBand15);
+    bandButtons.append(ui->toggleBand12);
+    bandButtons.append(ui->toggleBand10);
+    bandButtons.append(ui->toggleBand6);
+    bandButtons.append(ui->toggleBandFM);
+    bandButtons.append(ui->toggleBandAir);
+    bandButtons.append(ui->toggleBand2);
+    bandButtons.append(ui->toggleBand13);
+    bandButtons.append(ui->toggleBand70);
+    bandButtons.append(ui->toggleBand23);
+
+
 //*--- Connect SIGNALS with SLOTS of the GUI objects
 
     connect(&tmrRead, SIGNAL(timeout()), this, SLOT(tmrRead_timeout()));
@@ -297,10 +320,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //*--- initialize CAT and DDS
 
-   vfo[VFOA]=vfoLower;
-   vfo[VFOB]=vfoUpper;
-   vfoAB=VFOA;
-   (vfoAB==VFOA?ui->labelVFO->setText("VFOA"):ui->labelVFO->setText("VFOB"));
+   //vfo[VFOA]=vfoLower;
+   //vfo[VFOB]=vfoUpper;
+   //vfoAB=VFOA;
+   //(vfoAB==VFOA?ui->labelVFO->setText("VFOA"):ui->labelVFO->setText("VFOB"));
    
 
    setWord(&FT817,SPLIT,false);
@@ -661,6 +684,77 @@ void MainWindow::on_toggleCW_toggled(bool checked) { untoggleOtherModButtonsThan
 void MainWindow::on_toggleCWR_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleCWR); }
 void MainWindow::on_toggleDSP_toggled(bool checked) { untoggleOtherModButtonsThan(ui->toggleDSP); }
 void MainWindow::on_togglePKT_toggled(bool checked) { untoggleOtherModButtonsThan(ui->togglePKT); }
+
+
+//*------------------------------------------------------------------------------------------------
+void MainWindow::on_toggleBandVF_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBandVF); }
+void MainWindow::on_toggleBandLF_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBandLF); }
+void MainWindow::on_toggleBand160_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand160); }
+void MainWindow::on_toggleBand80_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand80); }
+void MainWindow::on_toggleBand40_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand40); }
+void MainWindow::on_toggleBand30_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand30); }
+void MainWindow::on_toggleBand20_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand20); }
+void MainWindow::on_toggleBand17_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand17); }
+void MainWindow::on_toggleBand15_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand15); }
+void MainWindow::on_toggleBand12_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand12); }
+void MainWindow::on_toggleBand10_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand10); }
+void MainWindow::on_toggleBand6_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand6); }
+void MainWindow::on_toggleBandFM_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBandFM); }
+void MainWindow::on_toggleBandAir_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBandAir); }
+void MainWindow::on_toggleBand2_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand2); }
+void MainWindow::on_toggleBand13_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand13); }
+void MainWindow::on_toggleBand70_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand70); }
+void MainWindow::on_toggleBand23_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand23); }
+
+//*--------------------------------------------------------------------------------------------------------
+//* untoggleOtherBandButtonsThan
+//* Change band, set new frequency, limits and LO
+//*--------------------------------------------------------------------------------------------------------
+void MainWindow::untoggleOtherBandButtonsThan(QPushButton* pb) {
+
+    qDebug()<<"untoggleOtherBandButtonsThan"<< pb->text();
+    static bool protect;
+    if(protect) return;
+    protect = true;
+    foreach(QPushButton* ipb, bandButtons) if(ipb!=pb) ipb->setChecked(false); else pb->setChecked(true);
+    protect = false;
+
+    //if(ui->toggleRun->isChecked())
+    //{
+    //    if(procDemod.pid()) kill(procDemod.pid(), SIGTERM);
+    //    procDemod.waitForFinished(1000);
+    //    procDemod.start(getDemodulatorCommand());
+    //    procDemod.waitForStarted(1000);
+    //    setShift();
+    //    ui->dial->setEnabled(true);
+    //}
+    //updateFilterBw();
+
+    if (ui->toggleBandVF->isChecked()) {vfo->vfoband[vfo->vfoAB]=0;}
+    if (ui->toggleBandLF->isChecked()) {vfo->vfoband[vfo->vfoAB]=1;}
+    if (ui->toggleBand160->isChecked()) {vfo->vfoband[vfo->vfoAB]=2;}
+    if (ui->toggleBand80->isChecked()) {vfo->vfoband[vfo->vfoAB]=3;}
+    if (ui->toggleBand40->isChecked()) {vfo->vfoband[vfo->vfoAB]=4;}
+    if (ui->toggleBand30->isChecked()) {vfo->vfoband[vfo->vfoAB]=5;}
+    if (ui->toggleBand20->isChecked()) {vfo->vfoband[vfo->vfoAB]=6;}
+    if (ui->toggleBand17->isChecked()) {vfo->vfoband[vfo->vfoAB]=7;}
+    if (ui->toggleBand15->isChecked()) {vfo->vfoband[vfo->vfoAB]=8;}
+    if (ui->toggleBand12->isChecked()) {vfo->vfoband[vfo->vfoAB]=9;}
+    if (ui->toggleBand10->isChecked()) {vfo->vfoband[vfo->vfoAB]=10;}
+    if (ui->toggleBand6->isChecked()) {vfo->vfoband[vfo->vfoAB]=11;}
+    if (ui->toggleBandFM->isChecked()) {vfo->vfoband[vfo->vfoAB]=12;}
+    if (ui->toggleBandAir->isChecked()) {vfo->vfoband[vfo->vfoAB]=13;}
+    if (ui->toggleBand2->isChecked()) {vfo->vfoband[vfo->vfoAB]=14;}
+    if (ui->toggleBand13->isChecked()) {vfo->vfoband[vfo->vfoAB]=15;}
+    if (ui->toggleBand70->isChecked()) {vfo->vfoband[vfo->vfoAB]=16;}
+    if (ui->toggleBand23->isChecked()) {vfo->vfoband[vfo->vfoAB]=17;}
+
+    qDebug() << "Band set to " << vfo->vfoband[vfo->vfoAB];
+    ui->comboDirectSamp->setCurrentIndex(vfo->inSamp[vfo->vfoband[vfo->vfoAB]]);
+    ui->spinCenter->setValue((vfo->loFreq[vfo->vfoband[vfo->vfoAB]]*1000)-10000);
+    ui->spinOffset->setValue(10000);    
+
+}
 
 //*---------------------------------------------------------------------------------------------------------------------
 //* untoggleOtherModButtonsThan

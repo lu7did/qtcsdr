@@ -713,7 +713,7 @@
         <enum>Qt::Vertical</enum>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBandVF">
+      <widget class="QPushButton" name="toggleBandVF">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -730,8 +730,11 @@
        <property name="text">
         <string>VF</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBandLF">
+      <widget class="QPushButton" name="toggleBandLF">
        <property name="geometry">
         <rect>
          <x>40</x>
@@ -748,8 +751,11 @@
        <property name="text">
         <string>LF</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBand160">
+      <widget class="QPushButton" name="toggleBand160">
        <property name="geometry">
         <rect>
          <x>70</x>
@@ -766,8 +772,11 @@
        <property name="text">
         <string>160</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBand80">
+      <widget class="QPushButton" name="toggleBand80">
        <property name="geometry">
         <rect>
          <x>100</x>
@@ -784,8 +793,11 @@
        <property name="text">
         <string>80</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBand40">
+      <widget class="QPushButton" name="toggleBand40">
        <property name="geometry">
         <rect>
          <x>130</x>
@@ -802,8 +814,11 @@
        <property name="text">
         <string>40</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBand30">
+      <widget class="QPushButton" name="toggleBand30">
        <property name="geometry">
         <rect>
          <x>160</x>
@@ -820,8 +835,11 @@
        <property name="text">
         <string>30</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBand20">
+      <widget class="QPushButton" name="toggleBand20">
        <property name="geometry">
         <rect>
          <x>190</x>
@@ -838,8 +856,11 @@
        <property name="text">
         <string>20</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBand17">
+      <widget class="QPushButton" name="toggleBand17">
        <property name="geometry">
         <rect>
          <x>220</x>
@@ -856,8 +877,11 @@
        <property name="text">
         <string>17</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBand15">
+      <widget class="QPushButton" name="toggleBand15">
        <property name="geometry">
         <rect>
          <x>250</x>
@@ -874,8 +898,11 @@
        <property name="text">
         <string>15</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBand12">
+      <widget class="QPushButton" name="toggleBand12">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -892,8 +919,11 @@
        <property name="text">
         <string>12</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBand10">
+      <widget class="QPushButton" name="toggleBand10">
        <property name="geometry">
         <rect>
          <x>40</x>
@@ -910,8 +940,11 @@
        <property name="text">
         <string>10</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBand6">
+      <widget class="QPushButton" name="toggleBand6">
        <property name="geometry">
         <rect>
          <x>70</x>
@@ -928,8 +961,11 @@
        <property name="text">
         <string>6</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBandFM">
+      <widget class="QPushButton" name="toggleBandFM">
        <property name="geometry">
         <rect>
          <x>100</x>
@@ -946,8 +982,11 @@
        <property name="text">
         <string>FM</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBandAir">
+      <widget class="QPushButton" name="toggleBandAir">
        <property name="geometry">
         <rect>
          <x>130</x>
@@ -964,8 +1003,11 @@
        <property name="text">
         <string>Air</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBand2">
+      <widget class="QPushButton" name="toggleBand2">
        <property name="geometry">
         <rect>
          <x>160</x>
@@ -982,8 +1024,11 @@
        <property name="text">
         <string>2</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBand70">
+      <widget class="QPushButton" name="toggleBand13">
        <property name="geometry">
         <rect>
          <x>190</x>
@@ -998,10 +1043,13 @@
         </font>
        </property>
        <property name="text">
-        <string>70</string>
+        <string>1.3</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBand012">
+      <widget class="QPushButton" name="toggleBand70">
        <property name="geometry">
         <rect>
          <x>220</x>
@@ -1016,10 +1064,13 @@
         </font>
        </property>
        <property name="text">
-        <string>1.2</string>
+        <string>70</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButtonBandFree">
+      <widget class="QPushButton" name="toggleBand23">
        <property name="geometry">
         <rect>
          <x>250</x>
@@ -1034,7 +1085,10 @@
         </font>
        </property>
        <property name="text">
-        <string>Free</string>
+        <string>23</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
       <widget class="QPushButton" name="toggleDSP">
@@ -1282,24 +1336,24 @@
       <zorder>verticalSlider_3</zorder>
       <zorder>verticalSlider_4</zorder>
       <zorder>verticalSlider_5</zorder>
-      <zorder>pushButtonBandVF</zorder>
-      <zorder>pushButtonBandLF</zorder>
-      <zorder>pushButtonBand160</zorder>
-      <zorder>pushButtonBand80</zorder>
-      <zorder>pushButtonBand40</zorder>
-      <zorder>pushButtonBand30</zorder>
-      <zorder>pushButtonBand20</zorder>
-      <zorder>pushButtonBand17</zorder>
-      <zorder>pushButtonBand15</zorder>
-      <zorder>pushButtonBand12</zorder>
-      <zorder>pushButtonBand10</zorder>
-      <zorder>pushButtonBand6</zorder>
-      <zorder>pushButtonBandFM</zorder>
-      <zorder>pushButtonBandAir</zorder>
-      <zorder>pushButtonBand2</zorder>
-      <zorder>pushButtonBand70</zorder>
-      <zorder>pushButtonBand012</zorder>
-      <zorder>pushButtonBandFree</zorder>
+      <zorder>toggleBandVF</zorder>
+      <zorder>toggleBandLF</zorder>
+      <zorder>toggleBand160</zorder>
+      <zorder>toggleBand80</zorder>
+      <zorder>toggleBand40</zorder>
+      <zorder>toggleBand30</zorder>
+      <zorder>toggleBand20</zorder>
+      <zorder>toggleBand17</zorder>
+      <zorder>toggleBand15</zorder>
+      <zorder>toggleBand12</zorder>
+      <zorder>toggleBand10</zorder>
+      <zorder>toggleBand6</zorder>
+      <zorder>toggleBandFM</zorder>
+      <zorder>toggleBandAir</zorder>
+      <zorder>toggleBand2</zorder>
+      <zorder>toggleBand13</zorder>
+      <zorder>toggleBand70</zorder>
+      <zorder>toggleBand23</zorder>
       <zorder>toggleDSP</zorder>
       <zorder>labelCAT</zorder>
       <zorder>labelPWR</zorder>

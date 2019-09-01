@@ -89,6 +89,28 @@ private slots:
     void on_toggleDSP_toggled(bool checked);
     void on_togglePKT_toggled(bool checked);
 
+
+    void on_toggleBandVF_toggled(bool checked);
+    void on_toggleBandLF_toggled(bool checked);
+    void on_toggleBand160_toggled(bool checked);
+    void on_toggleBand80_toggled(bool checked);
+    void on_toggleBand40_toggled(bool checked);
+    void on_toggleBand30_toggled(bool checked);
+    void on_toggleBand20_toggled(bool checked);
+    void on_toggleBand17_toggled(bool checked);
+    void on_toggleBand15_toggled(bool checked);
+    void on_toggleBand12_toggled(bool checked);
+    void on_toggleBand10_toggled(bool checked);
+    void on_toggleBand6_toggled(bool checked);
+    void on_toggleBandFM_toggled(bool checked);
+    void on_toggleBandAir_toggled(bool checked);
+    void on_toggleBand2_toggled(bool checked);
+    void on_toggleBand13_toggled(bool checked);
+    void on_toggleBand70_toggled(bool checked);
+    void on_toggleBand23_toggled(bool checked);
+
+
+
     void on_toggleRun_toggled(bool checked);
     void on_spinFreq_valueChanged(int val);
     void on_lcdNumberPanel_valueChanged(int val);
@@ -117,7 +139,10 @@ private slots:
 
 private:
     QList<QPushButton*> modsButtons;
+    QList<QPushButton*> bandButtons;
+
     void untoggleOtherModButtonsThan(QPushButton* pb);
+    void untoggleOtherBandButtonsThan(QPushButton* pb);
     void sendCommand(unsigned char cmd_num, unsigned value);
     QString getDemodulatorCommand();
     void redirectProcessOutput(QProcess &proc, bool onlyStdErr = false);
