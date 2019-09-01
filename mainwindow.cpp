@@ -706,6 +706,11 @@ void MainWindow::on_toggleBand13_toggled(bool checked) { untoggleOtherBandButton
 void MainWindow::on_toggleBand70_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand70); }
 void MainWindow::on_toggleBand23_toggled(bool checked) { untoggleOtherBandButtonsThan(ui->toggleBand23); }
 
+void MainWindow::on_tool1MHzUp_clicked(bool checked) { ui->spinCenter->setValue(ui->spinCenter->value()+1000000); }
+void MainWindow::on_tool1MHzDown_clicked(bool checked) { ui->spinCenter->setValue(ui->spinCenter->value()-1000000); }
+void MainWindow::on_tool100KHzUp_clicked(bool checked) { ui->spinCenter->setValue(ui->spinCenter->value()+100000); }
+void MainWindow::on_tool100KHzDown_clicked(bool checked) { ui->spinCenter->setValue(ui->spinCenter->value()-100000); }
+
 //*--------------------------------------------------------------------------------------------------------
 //* untoggleOtherBandButtonsThan
 //* Change band, set new frequency, limits and LO

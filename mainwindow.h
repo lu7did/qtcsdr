@@ -109,7 +109,10 @@ private slots:
     void on_toggleBand70_toggled(bool checked);
     void on_toggleBand23_toggled(bool checked);
 
-
+    void on_tool1MHzUp_clicked(bool checked);
+    void on_tool1MHzDown_clicked(bool checked);
+    void on_tool100KHzUp_clicked(bool checked);
+    void on_tool100KHzDown_clicked(bool checked);
 
     void on_toggleRun_toggled(bool checked);
     void on_spinFreq_valueChanged(int val);

@@ -23,6 +23,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSpinBox>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include "qmyspectrumwidget.h"
@@ -96,6 +97,10 @@ public:
     QPushButton *togglePKT;
     QDial *dial;
     QLabel *label_5;
+    QToolButton *tool1MHzUp;
+    QToolButton *tool100KHzUp;
+    QToolButton *tool100KHzDown;
+    QToolButton *tool1MHzDown;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -222,12 +227,12 @@ public:
         toggleCWR->setCheckable(true);
         lcdNumberPanel = new QLCDNumber(widgetControls);
         lcdNumberPanel->setObjectName(QStringLiteral("lcdNumberPanel"));
-        lcdNumberPanel->setGeometry(QRect(360, 30, 231, 101));
+        lcdNumberPanel->setGeometry(QRect(360, 30, 211, 101));
         lcdNumberPanel->setSmallDecimalPoint(true);
         lcdNumberPanel->setDigitCount(7);
         progressBarMeter = new QProgressBar(widgetControls);
         progressBarMeter->setObjectName(QStringLiteral("progressBarMeter"));
-        progressBarMeter->setGeometry(QRect(414, 34, 170, 8));
+        progressBarMeter->setGeometry(QRect(414, 34, 150, 8));
         progressBarMeter->setFont(font2);
         progressBarMeter->setValue(24);
         progressBarMeter->setTextVisible(false);
@@ -429,6 +434,22 @@ public:
         label_5->setObjectName(QStringLiteral("label_5"));
         label_5->setGeometry(QRect(-1, 74, 121, 31));
         label_5->setFont(font2);
+        tool1MHzUp = new QToolButton(widgetControls);
+        tool1MHzUp->setObjectName(QStringLiteral("tool1MHzUp"));
+        tool1MHzUp->setGeometry(QRect(577, 32, 21, 23));
+        tool1MHzUp->setArrowType(Qt::UpArrow);
+        tool100KHzUp = new QToolButton(widgetControls);
+        tool100KHzUp->setObjectName(QStringLiteral("tool100KHzUp"));
+        tool100KHzUp->setGeometry(QRect(577, 54, 21, 23));
+        tool100KHzUp->setArrowType(Qt::LeftArrow);
+        tool100KHzDown = new QToolButton(widgetControls);
+        tool100KHzDown->setObjectName(QStringLiteral("tool100KHzDown"));
+        tool100KHzDown->setGeometry(QRect(578, 85, 21, 23));
+        tool100KHzDown->setArrowType(Qt::RightArrow);
+        tool1MHzDown = new QToolButton(widgetControls);
+        tool1MHzDown->setObjectName(QStringLiteral("tool1MHzDown"));
+        tool1MHzDown->setGeometry(QRect(578, 107, 21, 23));
+        tool1MHzDown->setArrowType(Qt::DownArrow);
         label_4->raise();
         label->raise();
         toggleAM->raise();
@@ -489,6 +510,10 @@ public:
         togglePKT->raise();
         dial->raise();
         label_5->raise();
+        tool1MHzUp->raise();
+        tool100KHzUp->raise();
+        tool100KHzDown->raise();
+        tool1MHzDown->raise();
 
         verticalLayout->addWidget(widgetControls);
 
@@ -569,6 +594,10 @@ public:
         pushButtonBreak->setText(QApplication::translate("MainWindow", "Break", Q_NULLPTR));
         togglePKT->setText(QApplication::translate("MainWindow", "PKT", Q_NULLPTR));
         label_5->setText(QApplication::translate("MainWindow", "Samp. type:", Q_NULLPTR));
+        tool1MHzUp->setText(QApplication::translate("MainWindow", "...", Q_NULLPTR));
+        tool100KHzUp->setText(QApplication::translate("MainWindow", "...", Q_NULLPTR));
+        tool100KHzDown->setText(QApplication::translate("MainWindow", "...", Q_NULLPTR));
+        tool1MHzDown->setText(QApplication::translate("MainWindow", "...", Q_NULLPTR));
     } // retranslateUi
 
 };
